@@ -20,17 +20,17 @@ public class FriendController {
 
     @GetMapping
     public List<FriendResponse> getFriends() {
-        return FriendMapper.toFriendResponses(friendService.getFriends());
+        return FriendMapper.toDtoList(friendService.getFriends());
     }
 
     @GetMapping("/{id}")
     public FriendResponse getFriend(@PathVariable Long id) {
-        return FriendMapper.toFriendResponse(friendService.getFriend(id));
+        return FriendMapper.toDto(friendService.getFriend(id));
     }
 
     @PostMapping
     public void createFriend(@RequestBody FriendRequest friendRequest) {
-        friendService.createFriend(FriendMapper.toFriend(friendRequest));
+        friendService.createFriend(FriendMapper.toModel(friendRequest));
     }
 
     @PutMapping("/{id}")

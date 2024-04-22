@@ -36,6 +36,7 @@ public class ExpenseService {
     }
 
     public void createExpense(Expense expense) {
+        if (expense.getAmount() <= 0) throw new RuntimeException("Amount must be greater than 0");
         expense.setDate(new Timestamp(System.currentTimeMillis()));
         setExpenseFriend(expense);
         expenseRepository.save(expense);

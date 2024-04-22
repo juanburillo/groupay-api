@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ExpenseMapper {
 
-    public static Expense toExpense(ExpenseRequest expenseRequest) {
+    public static Expense toModel(ExpenseRequest expenseRequest) {
         return new Expense(
                 expenseRequest.getId(),
                 expenseRequest.getAmount(),
@@ -21,25 +21,25 @@ public class ExpenseMapper {
         );
     }
 
-    public static Expense toExpense(ExpenseEntity expenseEntity) {
+    public static Expense toModel(ExpenseEntity expenseEntity) {
         return new Expense(
                 expenseEntity.getId(),
                 expenseEntity.getAmount(),
                 expenseEntity.getDescription(),
                 expenseEntity.getDate(),
-                new Friend(expenseEntity.getId())
+                new Friend(expenseEntity.getFriendId())
         );
     }
 
-    public static List<Expense> toExpenses(List<ExpenseEntity> expenseEntities) {
+    public static List<Expense> toModelList(List<ExpenseEntity> expenseEntities) {
         List<Expense> expenseList = new ArrayList<>();
         for (ExpenseEntity expenseEntity : expenseEntities) {
-            expenseList.add(toExpense(expenseEntity));
+            expenseList.add(toModel(expenseEntity));
         }
         return expenseList;
     }
 
-    public static ExpenseResponse toExpenseResponse(Expense expense) {
+    public static ExpenseResponse toDto(Expense expense) {
         return new ExpenseResponse(
                 expense.getId(),
                 expense.getAmount(),
@@ -49,7 +49,7 @@ public class ExpenseMapper {
         );
     }
 
-    public static List<ExpenseResponse> toExpenseResponses(List<Expense> expenses) {
+    public static List<ExpenseResponse> toDtoList(List<Expense> expenses) {
         List<ExpenseResponse> expenseResponses = new ArrayList<>();
         for (Expense expense : expenses) {
             expenseResponses.add(
@@ -64,7 +64,5 @@ public class ExpenseMapper {
         }
         return expenseResponses;
     }
-
-
 
 }

@@ -46,7 +46,7 @@ public class ExpenseControllerTest {
         // Define expense ID and sample expense data
         Long expenseId = 1L;
         Expense expense = new Expense(expenseId, 1.1, "Description 1", new Friend(1L, "Juan"));
-        ExpenseResponse expectedExpenseRespone = new ExpenseResponse(expenseId, 1.1, "Description 1", new Friend(1L, "Juan"));
+        ExpenseResponse expectedExpenseResponse = new ExpenseResponse(expenseId, 1.1, "Description 1", new Friend(1L, "Juan"));
 
         // Mock expenseService to return expense for the ID
         Mockito.when(expenseService.getExpense(expenseId)).thenReturn(expense);
@@ -55,7 +55,7 @@ public class ExpenseControllerTest {
         ExpenseResponse returnedExpenseResponse = sut.getExpense(expenseId);
 
         // Verify that the response matches expectations
-        Assertions.assertThat(returnedExpenseResponse).isEqualTo(expectedExpenseRespone);
+        Assertions.assertThat(returnedExpenseResponse).isEqualTo(expectedExpenseResponse);
     }
 
     @Test

@@ -9,28 +9,25 @@ import java.util.List;
 
 public class FriendMapper {
 
-    public static Friend toFriend(FriendRequest friendRequest) {
+    public static Friend toModel(FriendRequest friendRequest) {
         return new Friend(
                 friendRequest.getId(),
                 friendRequest.getName()
         );
     }
 
-    public static FriendResponse toFriendResponse(Friend friend) {
+    public static FriendResponse toDto(Friend friend) {
         return new FriendResponse(
                 friend.getId(),
                 friend.getName()
         );
     }
 
-    public static List<FriendResponse> toFriendResponses(List<Friend> friends) {
+    public static List<FriendResponse> toDtoList(List<Friend> friends) {
         List<FriendResponse> friendResponses = new ArrayList<>();
         for (Friend friend : friends) {
             friendResponses.add(
-                    new FriendResponse(
-                            friend.getId(),
-                            friend.getName()
-                    )
+                    toDto(friend)
             );
         }
         return friendResponses;

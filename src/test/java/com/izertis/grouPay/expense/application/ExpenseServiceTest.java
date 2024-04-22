@@ -8,6 +8,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,10 +58,7 @@ public class ExpenseServiceTest {
     @Test
     void shouldCreateExpense() {
         // Define expense data to be created
-        Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L, "Juan"));
-
-        // Mock expenseRepository to handle creating expense
-        Mockito.doNothing().when(expenseRepository).save(expectedExpense);
+        Expense expectedExpense = new Expense(1L, 1.1, "Description 1", Timestamp.valueOf(LocalDate.now().atStartOfDay()), new Friend(1L, "Juan"));
 
         // Call the service method
         sut.createExpense(expectedExpense);
@@ -72,9 +71,6 @@ public class ExpenseServiceTest {
     void shouldDeleteExpenseById() {
         // Define expense ID to be deleted
         Long expenseId = 1L;
-
-        // Mock expenseRepository to handle deletion
-        Mockito.doNothing().when(expenseRepository).deleteById(expenseId);
 
         // Call the controller method
         sut.deleteExpense(expenseId);
