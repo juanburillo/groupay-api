@@ -21,6 +21,7 @@ public class BalanceServiceTest {
 
     @Test
     void shouldCalculateAllBalancesAndReturnBalances() {
+        // Given
         List<Friend> friends = Arrays.asList(
                 new Friend(1L, "Juan"),
                 new Friend(2L, "María"),
@@ -39,6 +40,7 @@ public class BalanceServiceTest {
                 new Balance(friends.get(2), 1.1)
         );
 
+        // When
         Mockito.when(friendService.getFriends()).thenReturn(friends);
         Mockito.when(friendService.getFriend(1L)).thenReturn(friends.get(0));
         Mockito.when(friendService.getFriend(2L)).thenReturn(friends.get(1));
@@ -47,11 +49,13 @@ public class BalanceServiceTest {
 
         List<Balance> returnedBalances = sut.getBalances();
 
+        // Then
         Assertions.assertThat(returnedBalances).isEqualTo(expectedBalances);
     }
 
     @Test
     void shouldCalculateBalanceByFriendIdAndReturnBalance() {
+        // Given
         Long friendId = 1L;
         List<Friend> friends = Arrays.asList(
                 new Friend(1L, "Juan"),
@@ -67,12 +71,14 @@ public class BalanceServiceTest {
 
         Balance expectedBalance = new Balance(friends.get(0), -1.1);
 
+        // When
         Mockito.when(friendService.getFriends()).thenReturn(friends);
         Mockito.when(friendService.getFriend(friendId)).thenReturn(friends.get(0));
         Mockito.when(expenseService.getExpenses()).thenReturn(expenses);
 
         Balance returnedBalance = sut.getBalance(friendId);
 
+        // Then
         Assertions.assertThat(returnedBalance).isEqualTo(expectedBalance);
     }
 

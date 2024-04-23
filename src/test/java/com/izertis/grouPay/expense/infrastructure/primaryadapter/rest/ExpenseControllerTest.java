@@ -18,7 +18,7 @@ public class ExpenseControllerTest {
 
     @Test
     void shouldFindAllExpensesAndReturnExpenses() {
-        // Define sample expense data
+        // Given
         List<Expense> expenses = Arrays.asList(
                 new Expense(1L, 1.1, "Description 1", new Friend(1L, "Juan")),
                 new Expense(2L, 2.2, "Description 2", new Friend(2L, "María")),
@@ -31,55 +31,53 @@ public class ExpenseControllerTest {
                 new ExpenseResponse(3L, 3.3, "Description 3", new Friend(3L, "Belén"))
         );
 
-        // Mock expenseService to return sample data
+        // When
         Mockito.when(expenseService.getExpenses()).thenReturn(expenses);
 
-        // Call the controller method
         List<ExpenseResponse> returnedExpenseResponses = sut.getExpenses();
 
-        // Verify that the response matches expectations
+        // Then
         Assertions.assertThat(returnedExpenseResponses).isEqualTo(expectedExpenseResponses);
     }
 
     @Test
     void shouldFindExpenseByIdAndReturnExpense() {
-        // Define expense ID and sample expense data
+        // Given
         Long expenseId = 1L;
         Expense expense = new Expense(expenseId, 1.1, "Description 1", new Friend(1L, "Juan"));
         ExpenseResponse expectedExpenseResponse = new ExpenseResponse(expenseId, 1.1, "Description 1", new Friend(1L, "Juan"));
 
-        // Mock expenseService to return expense for the ID
+        // When
         Mockito.when(expenseService.getExpense(expenseId)).thenReturn(expense);
 
-        // Call the controller method
         ExpenseResponse returnedExpenseResponse = sut.getExpense(expenseId);
 
-        // Verify that the response matches expectations
+        // Then
         Assertions.assertThat(returnedExpenseResponse).isEqualTo(expectedExpenseResponse);
     }
 
     @Test
     void shouldCreateExpense() {
-        // Define expense data to be created
+        // Given
         ExpenseRequest expenseRequest = new ExpenseRequest(1L, 1.1, "Description 1", 1L);
         Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L));
 
-        // Call the controller method
+        // When
         sut.createExpense(expenseRequest);
 
-        // Verify Mockito captures the createExpense call with the correct data
+        // Then
         Mockito.verify(expenseService).createExpense(expectedExpense);
     }
 
     @Test
     void shouldDeleteExpenseById() {
-        // Define expense ID to be deleted
+        // Given
         Long expenseId = 1L;
 
-        // Call the controller method
+        // When
         sut.deleteExpense(expenseId);
 
-        // Verify Mockito captures de deletedExpense call with the correct data
+        // Then
         Mockito.verify(expenseService).deleteExpense(expenseId);
     }
 
