@@ -64,9 +64,6 @@ public class ExpenseControllerTest {
         ExpenseRequest expenseRequest = new ExpenseRequest(1L, 1.1, "Description 1", 1L);
         Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L));
 
-        // Mock expenseService to handle creating expense
-        Mockito.doNothing().when(expenseService).createExpense(expectedExpense);
-
         // Call the controller method
         sut.createExpense(expenseRequest);
 
@@ -78,9 +75,6 @@ public class ExpenseControllerTest {
     void shouldDeleteExpenseById() {
         // Define expense ID to be deleted
         Long expenseId = 1L;
-
-        // Mock expenseService to handle deletion
-        Mockito.doNothing().when(expenseService).deleteExpense(expenseId);
 
         // Call the controller method
         sut.deleteExpense(expenseId);

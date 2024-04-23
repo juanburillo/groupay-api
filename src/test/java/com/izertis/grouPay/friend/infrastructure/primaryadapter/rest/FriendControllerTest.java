@@ -63,9 +63,6 @@ public class FriendControllerTest {
         FriendRequest friendRequest = new FriendRequest(1L, "Juan");
         Friend expectedFriend = new Friend(1L, "Juan");
 
-        // Mock friendService to handle creating friend
-        Mockito.doNothing().when(friendService).createFriend(expectedFriend);
-
         // Call the controller method
         sut.createFriend(friendRequest);
 
@@ -79,9 +76,6 @@ public class FriendControllerTest {
         Long friendId = 1L;
         String nameToUpdate = "Juan (Updated)";
 
-        // Mock friendService to handle update
-        Mockito.doNothing().when(friendService).updateFriend(friendId, nameToUpdate);
-
         // Call the controller method
         sut.updateFriend(friendId, nameToUpdate);
 
@@ -93,9 +87,6 @@ public class FriendControllerTest {
     void shouldRemoveFriendById() {
         // Define friend ID to be deleted
         Long friendId = 1L;
-
-        // Mock friendService to handle deletion
-        Mockito.doNothing().when(friendService).deleteFriend(friendId);
 
         // Call the controller method
         sut.deleteFriend(friendId);

@@ -58,7 +58,7 @@ public class ExpenseServiceTest {
     @Test
     void shouldCreateExpense() {
         // Define expense data to be created
-        Expense expectedExpense = new Expense(1L, 1.1, "Description 1", Timestamp.valueOf(LocalDate.now().atStartOfDay()), new Friend(1L, "Juan"));
+        Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L, "Juan"));
 
         // Call the service method
         sut.createExpense(expectedExpense);
