@@ -29,6 +29,8 @@ public interface ExpenseMapper {
 
     List<ExpenseResponse> toDtoList(List<Expense> expenses);
 
-    Friend map(Long id);
+    default Friend map(Long id) {
+        return new Friend(id);
+    }
 
 }
