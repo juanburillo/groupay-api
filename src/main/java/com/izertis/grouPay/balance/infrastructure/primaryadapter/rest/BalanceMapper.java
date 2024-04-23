@@ -1,30 +1,17 @@
 package com.izertis.grouPay.balance.infrastructure.primaryadapter.rest;
 
 import com.izertis.grouPay.balance.domain.Balance;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class BalanceMapper {
+@Mapper
+public interface BalanceMapper {
 
-    public static List<BalanceResponse> toBalanceResponses(List<Balance> balances) {
-        List<BalanceResponse> balanceResponses = new ArrayList<>();
-        for (Balance balance : balances) {
-            balanceResponses.add(
-                    new BalanceResponse(
-                            balance.getFriend(),
-                            balance.getAmount()
-                    )
-            );
-        }
-        return balanceResponses;
-    }
+    BalanceMapper INSTANCE = Mappers.getMapper(BalanceMapper.class);
 
-    public static BalanceResponse toBalanceResponse(Balance balance) {
-        return new BalanceResponse(
-                balance.getFriend(),
-                balance.getAmount()
-        );
-    }
+    BalanceResponse toDto(Balance balance);
+    List<BalanceResponse> toDtoList(List<Balance> balances);
 
 }
