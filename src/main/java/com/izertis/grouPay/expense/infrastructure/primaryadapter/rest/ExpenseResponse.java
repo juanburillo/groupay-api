@@ -4,11 +4,13 @@ import com.izertis.grouPay.friend.domain.Friend;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
 @EqualsAndHashCode
+@NoArgsConstructor
 @AllArgsConstructor
 public class ExpenseResponse {
 
