@@ -49,6 +49,22 @@ public class FriendServiceTest {
     }
 
     @Test
+    void shouldFailToGetNonExistingFriend() {
+        // Given
+        Long nonExistingFriendId = -1L;
+
+        Class<FriendNotFoundException> expectedException = FriendNotFoundException.class;
+
+        // When
+        Mockito.when(friendRepository.existsById(nonExistingFriendId)).thenReturn(false);
+
+        // Then
+        Assertions.assertThatThrownBy(() -> sut.getFriend(nonExistingFriendId))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Friend not found");
+    }
+
+    @Test
     void shouldCreateFriend() {
         // Given
         Friend expectedFriend = new Friend(1L, "Juan");
@@ -74,6 +90,23 @@ public class FriendServiceTest {
     }
 
     @Test
+    void shouldFailToUpdateNonExistingFriend() {
+        // Given
+        Long nonExistingFriendId = -1L;
+        String nameToUpdate = "Juan";
+
+        Class<FriendNotFoundException> expectedException = FriendNotFoundException.class;
+
+        // When
+        Mockito.when(friendRepository.existsById(nonExistingFriendId)).thenReturn(false);
+
+        // Then
+        Assertions.assertThatThrownBy(() -> sut.updateFriend(nonExistingFriendId, nameToUpdate))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Friend not found");
+    }
+
+    @Test
     void shouldDeleteFriendById() {
         // Given
         Long friendId = 1L;
@@ -83,6 +116,22 @@ public class FriendServiceTest {
 
         // Then
         Mockito.verify(friendRepository).deleteById(friendId);
+    }
+
+    @Test
+    void shouldFailToDeleteNonExistingFriend() {
+        // Given
+        Long nonExistingFriendId = -1L;
+
+        Class<FriendNotFoundException> expectedException = FriendNotFoundException.class;
+
+        // When
+        Mockito.when(friendRepository.existsById(nonExistingFriendId)).thenReturn(false);
+
+        // Then
+        Assertions.assertThatThrownBy(() -> sut.deleteFriend(nonExistingFriendId))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Friend not found");
     }
 
 }

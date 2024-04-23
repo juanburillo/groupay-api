@@ -30,20 +30,28 @@ public class ExpenseService {
     }
 
     public Expense getExpense(Long id) {
-        Expense expense = expenseRepository.findById(id);
-        setExpenseFriend(expense);
-        return expense;
+        if (expenseRepository.existsById(id)) {
+            Expense expense = expenseRepository.findById(id);
+            setExpenseFriend(expense);
+            return expense;
+        } else {
+            throw new ExpenseNotFoundException("Expense not found");
+        }
     }
 
     public void createExpense(Expense expense) {
-        if (expense.getAmount() <= 0) throw new RuntimeException("Amount must be greater than 0");
+        if (expense.getAmount() <= 0) throw new IllegalArgumentException("Amount must be greater than 0");
         expense.setDate(new Timestamp(System.currentTimeMillis()));
         setExpenseFriend(expense);
         expenseRepository.save(expense);
     }
 
     public void deleteExpense(Long id) {
-        expenseRepository.deleteById(id);
+        if (expenseRepository.existsById(id)) {
+            expenseRepository.deleteById(id);
+        } else {
+            throw new ExpenseNotFoundException("Expense not found");
+        }
     }
 
     private void setExpenseFriend(Expense expense) {

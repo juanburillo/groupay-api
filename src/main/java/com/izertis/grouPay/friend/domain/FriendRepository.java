@@ -9,5 +9,6 @@ public interface FriendRepository {
     void save(Friend friend);
     void update(Long id, String name);
     void deleteById(Long id);
+    boolean existsById(Long id);
 
 }
