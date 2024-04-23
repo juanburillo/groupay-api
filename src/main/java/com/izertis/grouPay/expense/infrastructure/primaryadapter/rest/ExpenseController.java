@@ -3,6 +3,7 @@ package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
 import com.izertis.grouPay.expense.application.ExpenseService;
 import com.izertis.grouPay.expense.infrastructure.ExpenseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class ExpenseController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void createExpense(@RequestBody ExpenseRequest expenseRequest) {
         expenseService.createExpense(ExpenseMapper.INSTANCE.toModel(expenseRequest));
     }

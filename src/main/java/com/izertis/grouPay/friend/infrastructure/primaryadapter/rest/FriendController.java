@@ -3,6 +3,7 @@ package com.izertis.grouPay.friend.infrastructure.primaryadapter.rest;
 import com.izertis.grouPay.friend.application.FriendService;
 import com.izertis.grouPay.friend.infrastructure.FriendMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class FriendController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public void createFriend(@RequestBody FriendRequest friendRequest) {
         friendService.createFriend(FriendMapper.INSTANCE.toModel(friendRequest));
     }
