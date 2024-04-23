@@ -36,7 +36,7 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
             return expenseEntity;
         });
 
-        return ExpenseMapper.toModelList(expenseEntities);
+        return ExpenseMapper.INSTANCE.toModelList(expenseEntities);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
                 rs.getTimestamp(4),
                 rs.getLong(5)));
 
-        return ExpenseMapper.toModel(expenseEntity);
+        return ExpenseMapper.INSTANCE.toModel(expenseEntity);
     }
 
     @Override

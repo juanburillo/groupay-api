@@ -20,17 +20,17 @@ public class ExpenseController {
 
     @GetMapping
     public List<ExpenseResponse> getExpenses() {
-        return ExpenseMapper.toDtoList(expenseService.getExpenses());
+        return ExpenseMapper.INSTANCE.toDtoList(expenseService.getExpenses());
     }
 
     @GetMapping("/{id}")
     public ExpenseResponse getExpense(@PathVariable Long id) {
-        return ExpenseMapper.toDto(expenseService.getExpense(id));
+        return ExpenseMapper.INSTANCE.toDto(expenseService.getExpense(id));
     }
 
     @PostMapping
     public void createExpense(@RequestBody ExpenseRequest expenseRequest) {
-        expenseService.createExpense(ExpenseMapper.toModel(expenseRequest));
+        expenseService.createExpense(ExpenseMapper.INSTANCE.toModel(expenseRequest));
     }
 
     @DeleteMapping("/{id}")
