@@ -8,5 +8,6 @@ public interface ExpenseRepository {
     Expense findById(Long id);
     void save(Expense expense);
     void deleteById(Long id);
+    boolean existsById(Long id);
 
 }

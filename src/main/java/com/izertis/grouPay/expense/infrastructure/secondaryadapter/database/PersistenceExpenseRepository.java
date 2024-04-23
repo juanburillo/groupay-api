@@ -16,6 +16,7 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
     private static final String SELECT_EXPENSE = "SELECT * FROM expense WHERE id = ?";
     private static final String INSERT_EXPENSE = "INSERT INTO expense (amount, description, date, friend_id) VALUES (?,?,?,?)";
     private static final String DELETE_EXPENSE = "DELETE FROM expense WHERE id = ?";
+    private static final String EXPENSE_EXISTS = "SELECT COUNT(*) FROM expense WHERE id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -59,6 +60,11 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
     @Override
     public void deleteById(Long id) {
         jdbcTemplate.update(DELETE_EXPENSE, id);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return jdbcTemplate.queryForObject(EXPENSE_EXISTS, new Object[]{id}, Integer.class) > 0;
     }
 
 }

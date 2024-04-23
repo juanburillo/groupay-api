@@ -52,6 +52,22 @@ public class ExpenseServiceTest {
     }
 
     @Test
+    void shouldFailToGetNonExistingExpense() {
+        // Given
+        Long nonExistingExpenseId = -1L;
+
+        Class<ExpenseNotFoundException> expectedException = ExpenseNotFoundException.class;
+
+        // When
+        Mockito.when(expenseRepository.existsById(nonExistingExpenseId)).thenReturn(false);
+
+        // Then
+        Assertions.assertThatThrownBy(() -> sut.getExpense(nonExistingExpenseId))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Expense not found");
+    }
+
+    @Test
     void shouldCreateExpense() {
         // Given
         Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L, "Juan"));
@@ -64,6 +80,19 @@ public class ExpenseServiceTest {
     }
 
     @Test
+    void shouldFailToCreateExpenseWithNegativeAmount() {
+        // Given
+        Expense invalidExpense = new Expense(1L, -1.0, "Description 1", new Friend(1L, "Juan"));
+
+        Class<IllegalArgumentException> expectedException = IllegalArgumentException.class;
+
+        // When & Then
+        Assertions.assertThatThrownBy(() -> sut.createExpense(invalidExpense))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Amount must be greater than 0");
+    }
+
+    @Test
     void shouldDeleteExpenseById() {
         // Given
         Long expenseId = 1L;
@@ -73,6 +102,22 @@ public class ExpenseServiceTest {
 
         // Then
         Mockito.verify(expenseRepository).deleteById(expenseId);
+    }
+
+    @Test
+    void shouldFailToDeleteNonExistingExpense() {
+        // Given
+        Long nonExistingExpenseId = -1L;
+
+        Class<ExpenseNotFoundException> expectedException = ExpenseNotFoundException.class;
+
+        // When
+        Mockito.when(expenseRepository.existsById(nonExistingExpenseId)).thenReturn(false);
+
+        // Then
+        Assertions.assertThatThrownBy(() -> sut.deleteExpense(nonExistingExpenseId))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Expense not found");
     }
 
 }

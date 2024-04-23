@@ -22,7 +22,11 @@ public class FriendService {
     }
 
     public Friend getFriend(Long id) {
-        return friendRepository.findById(id);
+        if (friendRepository.existsById(id)) {
+            return friendRepository.findById(id);
+        } else {
+            throw new FriendNotFoundException("Friend not found");
+        }
     }
 
     public void createFriend(Friend friend) {
@@ -30,11 +34,19 @@ public class FriendService {
     }
 
     public void updateFriend(Long id, String name) {
-        friendRepository.update(id, name);
+        if (friendRepository.existsById(id)) {
+            friendRepository.update(id, name);
+        } else {
+            throw new FriendNotFoundException("Friend not found");
+        }
     }
 
     public void deleteFriend(Long id) {
-        friendRepository.deleteById(id);
+        if (friendRepository.existsById(id)) {
+            friendRepository.deleteById(id);
+        } else {
+            throw new FriendNotFoundException("Friend not found");
+        }
     }
 
 }
