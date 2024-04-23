@@ -17,7 +17,7 @@ public class FriendControllerTest {
 
     @Test
     void shouldFindAllFriendsAndReturnFriends() {
-        // Define sample friend data
+        // Given
         List<Friend> friends = Arrays.asList(
                 new Friend(1L, "Juan"),
                 new Friend(2L, "María"),
@@ -30,68 +30,66 @@ public class FriendControllerTest {
                 new FriendResponse(3L, "Belén")
         );
 
-        // Mock friendService to return sample data
+        // When
         Mockito.when(friendService.getFriends()).thenReturn(friends);
 
-        // Call the controller method
         List<FriendResponse> returnedFriendResponses = sut.getFriends();
 
-        // Verify that the response matches expectations
+        // Then
         Assertions.assertThat(returnedFriendResponses).isEqualTo(expectedFriendResponses);
     }
 
     @Test
     void shouldFindFriendByIdAndReturnFriend() {
-        // Define friend ID and sample friend data
+        // Given
         Long friendId = 1L;
         Friend friend = new Friend(friendId, "Juan");
         FriendResponse expectedFriendResponse = new FriendResponse(friendId, "Juan");
 
-        // Mock friendService to return friend for the ID
+        // When
         Mockito.when(friendService.getFriend(friendId)).thenReturn(friend);
 
-        // Call the controller method
         FriendResponse returnedFriendResponse = sut.getFriend(friendId);
 
-        // Verify that the response matches expectations
+        // Then
         Assertions.assertThat(returnedFriendResponse).isEqualTo(expectedFriendResponse);
     }
 
     @Test
     void shouldCreateFriend() {
-        // Define friend data to be created
+        // Given
         FriendRequest friendRequest = new FriendRequest(1L, "Juan");
         Friend expectedFriend = new Friend(1L, "Juan");
 
-        // Call the controller method
+        // When
         sut.createFriend(friendRequest);
 
-        // Verify Mockito captures the createFriend call with the correct data
+        // Then
         Mockito.verify(friendService).createFriend(expectedFriend);
     }
 
     @Test
     void shouldUpdateFriend() {
-        // Define friend data for update
+        // Given
         Long friendId = 1L;
         String nameToUpdate = "Juan (Updated)";
 
-        // Call the controller method
+        // When
         sut.updateFriend(friendId, nameToUpdate);
 
-        // Verify Mockito captures the updateFriend call with the correct data
+        // Then
         Mockito.verify(friendService).updateFriend(friendId, nameToUpdate);
     }
 
     @Test
     void shouldRemoveFriendById() {
-        // Define friend ID to be deleted
+        // Given
         Long friendId = 1L;
 
-        // Call the controller method
+        // When
         sut.deleteFriend(friendId);
 
-        // Verify Mockito captures the deleteFriend call with the correct data
+        // Then
         Mockito.verify(friendService).deleteFriend(friendId);
     }
 

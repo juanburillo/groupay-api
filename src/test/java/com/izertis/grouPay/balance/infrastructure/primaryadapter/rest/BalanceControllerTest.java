@@ -18,6 +18,7 @@ public class BalanceControllerTest {
 
     @Test
     void shouldGetBalancesAndReturnBalances() {
+        // Given
         List<Balance> balances = Arrays.asList(
                 new Balance(new Friend(1L, "Juan"), 10.0),
                 new Balance(new Friend(2L, "María"), -20.0),
@@ -30,10 +31,12 @@ public class BalanceControllerTest {
                 new BalanceResponse(new Friend(3L, "Belén"), 30.0)
         );
 
+        // When
         Mockito.when(balanceService.getBalances()).thenReturn(balances);
 
         List<BalanceResponse> returnedBalances = sut.getBalances();
 
+        // Then
         Assertions.assertThat(returnedBalances).isEqualTo(expectedBalanceResponses);
     }
 
