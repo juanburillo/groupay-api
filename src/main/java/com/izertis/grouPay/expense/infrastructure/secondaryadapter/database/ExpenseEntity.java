@@ -1,5 +1,8 @@
 package com.izertis.grouPay.expense.infrastructure.secondaryadapter.database;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,8 +14,11 @@ import java.sql.Timestamp;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "expense")
 public class ExpenseEntity {
 
+    @Id
     private Long id;
     private Double amount;
     private String description;

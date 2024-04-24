@@ -1,0 +1,13 @@
+# docker compose -f ./docker-compose.yml up --build
+# docker exec -it docker-mysql-1 /bin/bash
+
+version: '3'
+services:
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: groupay
+    ports:
+      - 3306:3306
+    restart: always
