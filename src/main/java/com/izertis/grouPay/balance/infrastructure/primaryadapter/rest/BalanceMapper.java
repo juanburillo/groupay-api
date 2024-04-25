@@ -12,6 +12,7 @@ public interface BalanceMapper {
     BalanceMapper INSTANCE = Mappers.getMapper(BalanceMapper.class);
 
     BalanceResponse toDto(Balance balance);
+
     List<BalanceResponse> toDtoList(List<Balance> balances);
 
 }

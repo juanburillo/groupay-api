@@ -29,8 +29,15 @@ public interface ExpenseMapper {
 
     List<ExpenseResponse> toDtoList(List<Expense> expenses);
 
+    @Mapping(source = "friend", target = "friendId")
+    ExpenseEntity toEntity(Expense expense);
+
     default Friend map(Long friendId) {
         return new Friend(friendId);
+    }
+
+    default Long map(Friend friend) {
+        return friend.getId();
     }
 
 }

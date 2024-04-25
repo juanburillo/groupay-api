@@ -41,6 +41,7 @@ public class FriendServiceTest {
 
         // When
         Mockito.when(friendRepository.findById(friendId)).thenReturn(expectedFriend);
+        Mockito.when(friendRepository.existsById(friendId)).thenReturn(true);
 
         Friend returnedFriend = sut.getFriend(friendId);
 
@@ -83,6 +84,8 @@ public class FriendServiceTest {
         String nameToUpdate = "Juan (Updated)";
 
         // When
+        Mockito.when(friendRepository.existsById(friendId)).thenReturn(true);
+
         sut.updateFriend(friendId, nameToUpdate);
 
         // Then
@@ -112,6 +115,8 @@ public class FriendServiceTest {
         Long friendId = 1L;
 
         // When
+        Mockito.when(friendRepository.existsById(friendId)).thenReturn(true);
+
         sut.deleteFriend(friendId);
 
         // Then

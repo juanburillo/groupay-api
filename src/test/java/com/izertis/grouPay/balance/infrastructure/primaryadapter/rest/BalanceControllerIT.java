@@ -1,6 +1,11 @@
 package com.izertis.grouPay.balance.infrastructure.primaryadapter.rest;
 
+import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.domain.FriendRepository;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,10 +19,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BalanceControllerIT {
 
+    private final MockMvc mvc;
+    private final FriendRepository friendRepository;
+
     @Autowired
-    private MockMvc mvc;
+    public BalanceControllerIT(MockMvc mvc, FriendRepository friendRepository) {
+        this.mvc = mvc;
+        this.friendRepository = friendRepository;
+    }
+
+    @BeforeAll
+    public void setup() {
+        if (friendRepository.existsById(1L)) {
+            friendRepository.deleteById(1L);
+        }
+        friendRepository.save(new Friend(1L, "Juan"));
+    }
 
     @Test
     void shouldGetBalancesAndReturnStatus200() throws Exception {
@@ -46,6 +66,11 @@ public class BalanceControllerIT {
                 .andExpect(jsonPath("$.friend.id").exists())
                 .andExpect(jsonPath("$.friend.name").exists())
                 .andExpect(jsonPath("$.amount").exists());
+    }
+
+    @AfterAll
+    public void done() {
+        friendRepository.deleteById(1L);
     }
 
 }

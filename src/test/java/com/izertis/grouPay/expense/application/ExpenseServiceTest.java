@@ -44,6 +44,7 @@ public class ExpenseServiceTest {
 
         // When
         Mockito.when(expenseRepository.findById(expenseId)).thenReturn(expectedExpense);
+        Mockito.when(expenseRepository.existsById(expenseId)).thenReturn(true);
 
         Expense returnedExpense = sut.getExpense(expenseId);
 
@@ -98,6 +99,8 @@ public class ExpenseServiceTest {
         Long expenseId = 1L;
 
         // When
+        Mockito.when(expenseRepository.existsById(expenseId)).thenReturn(true);
+
         sut.deleteExpense(expenseId);
 
         // Then

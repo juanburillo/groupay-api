@@ -9,5 +9,5 @@ CREATE TABLE expense (
     description VARCHAR(255),
     date TIMESTAMP,
     friend_id INT,
-    FOREIGN KEY (friend_id) REFERENCES friend (id)
+    FOREIGN KEY (friend_id) REFERENCES friend (id) ON DELETE CASCADE
 );

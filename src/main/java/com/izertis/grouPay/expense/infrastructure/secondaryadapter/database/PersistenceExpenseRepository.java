@@ -15,6 +15,7 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
     private static final String SELECT_EXPENSES = "SELECT * FROM expense";
     private static final String SELECT_EXPENSE = "SELECT * FROM expense WHERE id = ?";
     private static final String INSERT_EXPENSE = "INSERT INTO expense (amount, description, date, friend_id) VALUES (?,?,?,?)";
+    private static final String INSERT_EXPENSE_WITH_ID = "INSERT INTO expense (id, amount, description, date, friend_id) VALUES (?,?,?,?,?)";
     private static final String DELETE_EXPENSE = "DELETE FROM expense WHERE id = ?";
     private static final String EXPENSE_EXISTS = "SELECT COUNT(*) FROM expense WHERE id = ?";
 
@@ -54,7 +55,13 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
 
     @Override
     public void save(Expense expense) {
-        jdbcTemplate.update(INSERT_EXPENSE, expense.getAmount(), expense.getDescription(), expense.getDate(), expense.getFriend().getId());
+        ExpenseEntity expenseEntity = ExpenseMapper.INSTANCE.toEntity(expense);
+
+        if(expenseEntity.getId() == null) {
+            jdbcTemplate.update(INSERT_EXPENSE, expenseEntity.getAmount(), expenseEntity.getDescription(), expenseEntity.getDate(), expenseEntity.getFriendId());
+        } else {
+            jdbcTemplate.update(INSERT_EXPENSE_WITH_ID, expenseEntity.getId(), expenseEntity.getAmount(), expenseEntity.getDescription(), expenseEntity.getDate(), expenseEntity.getFriendId());
+        }
     }
 
     @Override

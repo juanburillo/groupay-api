@@ -2,6 +2,7 @@ package com.izertis.grouPay.friend.infrastructure.secondaryadapter.database;
 
 import com.izertis.grouPay.friend.domain.Friend;
 import com.izertis.grouPay.friend.domain.FriendRepository;
+import com.izertis.grouPay.friend.infrastructure.FriendMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ public class PersistenceFriendRepository implements FriendRepository {
     private static final String SELECT_FRIENDS = "SELECT * FROM friend";
     private static final String SELECT_FRIEND = "SELECT * FROM friend WHERE id = ?";
     private static final String INSERT_FRIEND = "INSERT INTO friend (name) VALUES (?)";
+    private static final String INSERT_FRIEND_WITH_ID = "INSERT INTO friend (id, name) VALUES (?,?)";
     private static final String UPDATE_FRIEND = "UPDATE friend SET name = ? WHERE id = ?";
     private static final String DELETE_FRIEND = "DELETE FROM friend WHERE id = ?";
     private static final String FRIEND_EXISTS = "SELECT COUNT(*) FROM friend WHERE id = ?";
@@ -27,23 +29,32 @@ public class PersistenceFriendRepository implements FriendRepository {
 
     @Override
     public List<Friend> findAll() {
-        return jdbcTemplate.query(SELECT_FRIENDS, (rs, rowNum) -> {
-            Friend friend = new Friend();
-            friend.setId(rs.getLong(1));
-            friend.setName(rs.getString(2));
-            return friend;
+        List<FriendEntity> friendEntities = jdbcTemplate.query(SELECT_FRIENDS, (rs, rowNum) -> {
+            FriendEntity friendEntity = new FriendEntity();
+            friendEntity.setId(rs.getLong(1));
+            friendEntity.setName(rs.getString(2));
+            return friendEntity;
         });
+
+        return FriendMapper.INSTANCE.toModelList(friendEntities);
     }
 
     @Override
     public Friend findById(Long id) {
-        return jdbcTemplate.queryForObject(SELECT_FRIEND, new Object[]{id},
-                (rs, rowNum) -> new Friend(rs.getLong(1), rs.getString(2)));
+        FriendEntity friendEntity = jdbcTemplate.queryForObject(SELECT_FRIEND, new Object[]{id},
+                (rs, rowNum) -> new FriendEntity(rs.getLong(1), rs.getString(2)));
+
+        return FriendMapper.INSTANCE.toModel(friendEntity);
     }
 
     @Override
     public void save(Friend friend) {
-        jdbcTemplate.update(INSERT_FRIEND, friend.getName());
+        FriendEntity friendEntity = FriendMapper.INSTANCE.toEntity(friend);
+        if (friendEntity.getId() == null) {
+            jdbcTemplate.update(INSERT_FRIEND, friendEntity.getName());
+        } else {
+            jdbcTemplate.update(INSERT_FRIEND_WITH_ID, friendEntity.getId(), friendEntity.getName());
+        }
     }
 
     @Override
