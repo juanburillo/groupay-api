@@ -3,15 +3,19 @@ package com.izertis.grouPay.friend.infrastructure.secondaryadapter.database;
 import com.izertis.grouPay.friend.domain.Friend;
 import com.izertis.grouPay.friend.domain.FriendRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
+
+import java.util.List;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FriendRepositoryIT {
 
     private final FriendRepository friendRepository;
@@ -21,53 +25,107 @@ public class FriendRepositoryIT {
         this.friendRepository = friendRepository;
     }
 
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+
+    @BeforeAll
+    static void beforeAll() {
+        mysql.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        mysql.stop();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mysql::getJdbcUrl);
+        registry.add("spring.datasource.username", mysql::getUsername);
+        registry.add("spring.datasource.password", mysql::getPassword);
+    }
+
+    @BeforeEach
+    void setUp() {
+        friendRepository.deleteAll();
+        friendRepository.save(new Friend(1L, "Juan"));
+        friendRepository.save(new Friend(2L, "María"));
+        friendRepository.save(new Friend(3L, "Belén"));
+    }
+
     @Test
-    @Order(1)
-    void shouldSaveFriendInDatabase() {
+    void shouldGetAllFriends() {
+        // When
+        List<Friend> returnedFriends = friendRepository.findAll();
+
+        // Then
+        Assertions.assertThat(returnedFriends).hasSize(3);
+    }
+
+    @Test
+    void shouldGetFriendById() {
+        // Given
         Long friendId = 1L;
         Friend expectedFriend = new Friend(friendId, "Juan");
 
-        friendRepository.save(expectedFriend);
+        // When
+        Friend returnedFriend = friendRepository.findById(friendId);
 
-        Assertions.assertThat(friendRepository.findById(friendId)).isEqualTo(expectedFriend);
+        // Then
+        Assertions.assertThat(returnedFriend).isEqualTo(expectedFriend);
     }
 
     @Test
-    @Order(2)
-    void shouldGetAllFriendsFromDatabase() {
-        Assertions.assertThat(friendRepository.findAll()).hasSizeGreaterThan(0);
+    void shouldCreateFriend() {
+        // Given
+        Long friendId = 4L;
+        Friend friend = new Friend(friendId, "Adrián");
+
+        // When
+        friendRepository.save(friend);
+
+        // Then
+        Assertions.assertThat(friendRepository.findById(friendId)).isEqualTo(friend);
     }
 
     @Test
-    @Order(3)
-    void shouldGetFriendByIdFromDatabase() {
+    void shouldUpdateFriend() {
+        // Given
         Long friendId = 1L;
-        Friend expectedFriend = new Friend(friendId, "Juan");
+        String updatedName = "Eric";
+        Friend expectedFriend = new Friend(friendId, updatedName);
 
-        Assertions.assertThat(friendRepository.findById(friendId)).isEqualTo(expectedFriend);
+        // When
+        friendRepository.update(friendId, updatedName);
+
+        Friend returnedFriend = friendRepository.findById(friendId);
+
+        // Then
+        Assertions.assertThat(returnedFriend).isEqualTo(expectedFriend);
     }
 
     @Test
-    @Order(4)
-    void shouldUpdateFriendInDatabase() {
-        Long friendId = 1L;
-        String nameToUpdate = "Updated Name";
-
-        Friend expectedFriend = new Friend(friendId, nameToUpdate);
-
-        friendRepository.update(friendId, nameToUpdate);
-
-        Assertions.assertThat(friendRepository.findById(friendId)).isEqualTo(expectedFriend);
-    }
-
-    @Test
-    @Order(5)
-    void shouldDeleteFriendFromDatabase() {
+    void shouldDeleteFriendById() {
+        // Given
         Long friendId = 1L;
 
+        // When
         friendRepository.deleteById(friendId);
 
-        Assertions.assertThat(friendRepository.existsById(friendId)).isEqualTo(false);
+        boolean friendExists = friendRepository.existsById(friendId);
+
+        // Then
+        Assertions.assertThat(friendExists).isEqualTo(false);
+    }
+
+    @Test
+    void shouldDeleteAllFriends() {
+        // When
+        friendRepository.deleteAll();
+
+        List<Friend> returnedFriends = friendRepository.findAll();
+
+        // Then
+        Assertions.assertThat(returnedFriends).isEmpty();
     }
 
 }
