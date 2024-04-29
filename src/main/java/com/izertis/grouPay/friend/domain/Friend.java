@@ -18,4 +18,8 @@ public class Friend {
         this.id = id;
     }
 
+    public Friend(String name) {
+        this.name = name;
+    }
+
 }
