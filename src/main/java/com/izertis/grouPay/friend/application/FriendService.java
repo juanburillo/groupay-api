@@ -41,6 +41,10 @@ public class FriendService {
         }
     }
 
+    public void deleteFriends() {
+        friendRepository.deleteAll();
+    }
+
     public void deleteFriend(Long id) {
         if (friendRepository.existsById(id)) {
             friendRepository.deleteById(id);

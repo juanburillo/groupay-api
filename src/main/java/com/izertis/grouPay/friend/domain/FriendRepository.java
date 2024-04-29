@@ -8,6 +8,7 @@ public interface FriendRepository {
     Friend findById(Long id);
     void save(Friend friend);
     void update(Long id, String name);
+    void deleteAll();
     void deleteById(Long id);
     boolean existsById(Long id);
 

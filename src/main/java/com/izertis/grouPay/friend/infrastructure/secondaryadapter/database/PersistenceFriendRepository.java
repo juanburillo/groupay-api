@@ -17,6 +17,7 @@ public class PersistenceFriendRepository implements FriendRepository {
     private static final String INSERT_FRIEND = "INSERT INTO friend (name) VALUES (?)";
     private static final String INSERT_FRIEND_WITH_ID = "INSERT INTO friend (id, name) VALUES (?,?)";
     private static final String UPDATE_FRIEND = "UPDATE friend SET name = ? WHERE id = ?";
+    private static final String DELETE_FRIENDS = "DELETE FROM friend";
     private static final String DELETE_FRIEND = "DELETE FROM friend WHERE id = ?";
     private static final String FRIEND_EXISTS = "SELECT COUNT(*) FROM friend WHERE id = ?";
 
@@ -60,6 +61,11 @@ public class PersistenceFriendRepository implements FriendRepository {
     @Override
     public void update(Long id, String name) {
         jdbcTemplate.update(UPDATE_FRIEND, name, id);
+    }
+
+    @Override
+    public void deleteAll() {
+        jdbcTemplate.update(DELETE_FRIENDS);
     }
 
     @Override

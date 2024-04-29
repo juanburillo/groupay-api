@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,6 +108,15 @@ public class FriendServiceTest {
         Assertions.assertThatThrownBy(() -> sut.updateFriend(nonExistingFriendId, nameToUpdate))
                 .isInstanceOf(expectedException)
                 .hasMessageContaining("Friend not found");
+    }
+
+    @Test
+    void shouldDeleteAllFriends() {
+        // When
+        sut.deleteFriends();
+
+        // Then
+        Mockito.verify(friendRepository).deleteAll();
     }
 
     @Test

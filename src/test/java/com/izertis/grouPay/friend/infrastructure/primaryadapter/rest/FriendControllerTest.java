@@ -82,7 +82,16 @@ public class FriendControllerTest {
     }
 
     @Test
-    void shouldRemoveFriendById() {
+    void shouldDeleteAllFriends() {
+        // When
+        sut.deleteFriends();
+
+        // Then
+        Mockito.verify(friendService).deleteFriends();
+    }
+
+    @Test
+    void shouldDeleteFriendById() {
         // Given
         Long friendId = 1L;
 

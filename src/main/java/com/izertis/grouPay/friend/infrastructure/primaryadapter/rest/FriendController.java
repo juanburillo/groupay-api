@@ -65,6 +65,13 @@ public class FriendController {
         friendService.updateFriend(id, name);
     }
 
+    @Operation(summary = "Delete all friends")
+    @ApiResponse(responseCode = "200", description = "Friends deleted")
+    @DeleteMapping()
+    public void deleteFriends() {
+        friendService.deleteFriends();
+    }
+
     @Operation(summary = "Delete a friend by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Friend deleted"),
