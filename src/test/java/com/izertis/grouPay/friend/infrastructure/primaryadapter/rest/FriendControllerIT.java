@@ -20,8 +20,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FriendControllerIT {
 
+    private final MockMvc mvc;
+
     @Autowired
-    private MockMvc mvc;
+    public FriendControllerIT(MockMvc mvc) {
+        this.mvc = mvc;
+    }
 
     @Test
     @Order(1)
