@@ -27,7 +27,7 @@ public class BalanceController {
     }
 
     @Operation(summary = "Get all balances")
-    @ApiResponse(responseCode = "200", description = "Calculated all balances", content = {
+    @ApiResponse(responseCode = "200", description = "Calculated and returned all balances", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = BalanceResponse.class))
     })
     @GetMapping
@@ -37,7 +37,7 @@ public class BalanceController {
 
     @Operation(summary = "Get a balance by its friend ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Calculated specified friend balance", content = {
+            @ApiResponse(responseCode = "200", description = "Calculated and returned specified friend balance", content = {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = BalanceResponse.class))
             }),
             @ApiResponse(responseCode = "404", description = "Friend not found", content = @Content)
