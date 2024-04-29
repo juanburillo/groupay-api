@@ -78,8 +78,9 @@ public class FriendControllerIT {
         // Friend is found
         given()
                 .contentType(ContentType.JSON)
+                .pathParam("id", 1)
                 .when()
-                .get("/api/friend/1")
+                .get("/api/friend/{id}")
                 .then()
                 .statusCode(200)
                 .body("id", equalTo(1))
@@ -170,6 +171,37 @@ public class FriendControllerIT {
                 .get("/api/friend")
                 .then()
                 .body(".", hasSize(0));
+    }
+
+    @Test
+    void shouldFailToGetNonExistentFriend() {
+        given()
+                .pathParam("id", 9)
+                .when()
+                .get("/api/friend/{id}")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void shouldFailToUpdateNonExistentFriend() {
+        given()
+                .pathParam("id", 9)
+                .queryParam("name", "Eric")
+                .when()
+                .put("/api/friend/{id}")
+                .then()
+                .statusCode(404);
+    }
+
+    @Test
+    void shouldFailToDeleteNonExistentFriend() {
+        given()
+                .pathParam("id", 9)
+                .when()
+                .delete("/api/friend/{id}")
+                .then()
+                .statusCode(404);
     }
 
 }
