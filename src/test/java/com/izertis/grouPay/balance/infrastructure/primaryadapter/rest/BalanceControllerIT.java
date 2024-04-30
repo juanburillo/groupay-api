@@ -35,7 +35,7 @@ public class BalanceControllerIT {
     @LocalServerPort
     private Integer port;
 
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
 
     @BeforeAll
     static void beforeAll() {

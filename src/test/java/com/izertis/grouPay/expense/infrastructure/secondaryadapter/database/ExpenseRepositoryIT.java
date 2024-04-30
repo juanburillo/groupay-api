@@ -29,7 +29,7 @@ public class ExpenseRepositoryIT {
         this.friendRepository = friendRepository;
     }
 
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
 
     @BeforeAll
     static void beforeAll() {
