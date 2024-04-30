@@ -1,9 +1,9 @@
-CREATE TABLE friend (
+CREATE TABLE IF NOT EXISTS friend (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255)
 );
 
-CREATE TABLE expense (
+CREATE TABLE IF NOT EXISTS expense (
      id INT PRIMARY KEY AUTO_INCREMENT,
      amount DOUBLE,
      description VARCHAR(255),

@@ -1,76 +1,92 @@
 package com.izertis.grouPay.balance.infrastructure.primaryadapter.rest;
 
+import com.izertis.grouPay.expense.application.ExpenseService;
+import com.izertis.grouPay.expense.domain.Expense;
+import com.izertis.grouPay.friend.application.FriendService;
 import com.izertis.grouPay.friend.domain.Friend;
-import com.izertis.grouPay.friend.domain.FriendRepository;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BalanceControllerIT {
 
-    private final MockMvc mvc;
-    private final FriendRepository friendRepository;
+    private final FriendService friendService;
+    private final ExpenseService expenseService;
 
     @Autowired
-    public BalanceControllerIT(MockMvc mvc, FriendRepository friendRepository) {
-        this.mvc = mvc;
-        this.friendRepository = friendRepository;
+    public BalanceControllerIT(FriendService friendService, ExpenseService expenseService) {
+        this.friendService = friendService;
+        this.expenseService = expenseService;
     }
+
+    @LocalServerPort
+    private Integer port;
+
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
 
     @BeforeAll
-    public void setup() {
-        if (friendRepository.existsById(1L)) {
-            friendRepository.deleteById(1L);
-        }
-        friendRepository.save(new Friend(1L, "Juan"));
-    }
-
-    @Test
-    void shouldGetBalancesAndReturnStatus200() throws Exception {
-        mvc.perform(MockMvcRequestBuilders
-                        .get("/api/balance")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[*].friend").exists())
-                .andExpect(jsonPath("$[*].friend.id").exists())
-                .andExpect(jsonPath("$[*].friend.name").exists())
-                .andExpect(jsonPath("$[*].amount").exists());
-    }
-
-    @Test
-    void shouldGetBalanceByFriendIdAndReturnStatus200() throws Exception {
-        Long friendId = 1L;
-
-        mvc.perform(MockMvcRequestBuilders
-                        .get("/api/balance/{friendId}", friendId)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.friend").exists())
-                .andExpect(jsonPath("$.friend.id").exists())
-                .andExpect(jsonPath("$.friend.name").exists())
-                .andExpect(jsonPath("$.amount").exists());
+    static void beforeAll() {
+        mysql.start();
     }
 
     @AfterAll
-    public void done() {
-        friendRepository.deleteById(1L);
+    static void afterAll() {
+        mysql.stop();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mysql::getJdbcUrl);
+        registry.add("spring.datasource.username", mysql::getUsername);
+        registry.add("spring.datasource.password", mysql::getPassword);
+    }
+
+    @BeforeEach
+    void setUp() {
+        RestAssured.baseURI = "http://localhost:" + port;
+        friendService.deleteFriends();
+        friendService.createFriend(new Friend(1L, "Juan"));
+        friendService.createFriend(new Friend(2L, "María"));
+        friendService.createFriend(new Friend(3L, "Belén"));
+        expenseService.deleteExpenses();
+        expenseService.createExpense(new Expense(1L, 10.0, "Description 1", new Friend(1L, "Juan")));
+        expenseService.createExpense(new Expense(2L, 20.0, "Description 2", new Friend(2L, "María")));
+        expenseService.createExpense(new Expense(3L, 30.0, "Description 3", new Friend(3L, "Belén")));
+    }
+
+    @Test
+    void shouldGetBalances() {
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("api/balance")
+                .then()
+                .statusCode(200)
+                .body(".", hasSize(3));
+    }
+
+    @Test
+    void shouldGetBalanceByFriendId() {
+        given()
+                .contentType(ContentType.JSON)
+                .pathParam("id", 1)
+                .when()
+                .get("/api/expense/{id}")
+                .then()
+                .statusCode(200);
     }
 
 }

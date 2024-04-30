@@ -75,17 +75,15 @@ public class FriendControllerIT {
 
     @Test
     void shouldGetFriendById() {
-        Long id = 1L;
-
         // Friend is found
         given()
                 .contentType(ContentType.JSON)
-                .pathParam("id", id)
+                .pathParam("id", 1)
                 .when()
                 .get("/api/friend/{id}")
                 .then()
                 .statusCode(200)
-                .body("id", equalTo(id))
+                .body("id", equalTo(1))
                 .body("name", equalTo("Juan"));
     }
 
