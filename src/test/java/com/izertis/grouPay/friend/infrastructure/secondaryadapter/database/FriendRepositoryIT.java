@@ -83,8 +83,10 @@ public class FriendRepositoryIT {
         // When
         friendRepository.save(friend);
 
+        Friend returnedFriend = friendRepository.findById(friendId);
+
         // Then
-        Assertions.assertThat(friendRepository.findById(friendId)).isEqualTo(friend);
+        Assertions.assertThat(returnedFriend).isEqualTo(friend);
     }
 
     @Test
@@ -104,6 +106,17 @@ public class FriendRepositoryIT {
     }
 
     @Test
+    void shouldDeleteAllFriends() {
+        // When
+        friendRepository.deleteAll();
+
+        List<Friend> returnedFriends = friendRepository.findAll();
+
+        // Then
+        Assertions.assertThat(returnedFriends).isEmpty();
+    }
+
+    @Test
     void shouldDeleteFriendById() {
         // Given
         Long friendId = 1L;
@@ -114,18 +127,7 @@ public class FriendRepositoryIT {
         boolean friendExists = friendRepository.existsById(friendId);
 
         // Then
-        Assertions.assertThat(friendExists).isEqualTo(false);
-    }
-
-    @Test
-    void shouldDeleteAllFriends() {
-        // When
-        friendRepository.deleteAll();
-
-        List<Friend> returnedFriends = friendRepository.findAll();
-
-        // Then
-        Assertions.assertThat(returnedFriends).isEmpty();
+        Assertions.assertThat(friendExists).isFalse();
     }
 
 }
