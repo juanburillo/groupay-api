@@ -94,6 +94,15 @@ public class ExpenseServiceTest {
     }
 
     @Test
+    void shouldDeleteAllExpenses() {
+        // When
+        sut.deleteExpenses();
+
+        // Then
+        Mockito.verify(expenseRepository).deleteAll();
+    }
+
+    @Test
     void shouldDeleteExpenseById() {
         // Given
         Long expenseId = 1L;
