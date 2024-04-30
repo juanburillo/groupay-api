@@ -57,6 +57,13 @@ public class ExpenseController {
         expenseService.createExpense(ExpenseMapper.INSTANCE.toModel(expenseRequest));
     }
 
+    @DeleteMapping
+    @Operation(summary = "Delete all expenses")
+    @ApiResponse(responseCode = "200", description = "All expenses deleted")
+    public void deleteExpenses() {
+        expenseService.deleteExpenses();
+    }
+
     @Operation(summary = "Delete an expense by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense deleted"),

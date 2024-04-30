@@ -16,6 +16,7 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
     private static final String SELECT_EXPENSE = "SELECT * FROM expense WHERE id = ?";
     private static final String INSERT_EXPENSE = "INSERT INTO expense (amount, description, date, friend_id) VALUES (?,?,?,?)";
     private static final String INSERT_EXPENSE_WITH_ID = "INSERT INTO expense (id, amount, description, date, friend_id) VALUES (?,?,?,?,?)";
+    private static final String DELETE_EXPENSES = "DELETE FROM expense";
     private static final String DELETE_EXPENSE = "DELETE FROM expense WHERE id = ?";
     private static final String EXPENSE_EXISTS = "SELECT COUNT(*) FROM expense WHERE id = ?";
 
@@ -62,6 +63,11 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
         } else {
             jdbcTemplate.update(INSERT_EXPENSE_WITH_ID, expenseEntity.getId(), expenseEntity.getAmount(), expenseEntity.getDescription(), expenseEntity.getDate(), expenseEntity.getFriendId());
         }
+    }
+
+    @Override
+    public void deleteAll() {
+        jdbcTemplate.update(DELETE_EXPENSES);
     }
 
     @Override

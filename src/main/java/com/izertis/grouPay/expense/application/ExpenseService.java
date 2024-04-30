@@ -46,6 +46,10 @@ public class ExpenseService {
         expenseRepository.save(expense);
     }
 
+    public void deleteExpenses() {
+        expenseRepository.deleteAll();
+    }
+
     public void deleteExpense(Long id) {
         if (expenseRepository.existsById(id)) {
             expenseRepository.deleteById(id);
