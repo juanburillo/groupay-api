@@ -2,7 +2,6 @@ package com.izertis.grouPay.expense.application;
 
 import com.izertis.grouPay.expense.domain.Expense;
 import com.izertis.grouPay.expense.domain.ExpenseRepository;
-import com.izertis.grouPay.friend.application.FriendService;
 import com.izertis.grouPay.friend.domain.Friend;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,8 @@ import java.util.List;
 public class ExpenseServiceTest {
 
     private final ExpenseRepository expenseRepository = Mockito.mock(ExpenseRepository.class);
-    private final FriendService friendService = Mockito.mock(FriendService.class);
 
-    private final ExpenseService sut = new ExpenseService(expenseRepository, friendService);
+    private final ExpenseService sut = new ExpenseService(expenseRepository);
 
     @Test
     void shouldFindAllExpensesAndReturnExpenses() {

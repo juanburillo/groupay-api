@@ -2,7 +2,6 @@ package com.izertis.grouPay.expense.application;
 
 import com.izertis.grouPay.expense.domain.Expense;
 import com.izertis.grouPay.expense.domain.ExpenseRepository;
-import com.izertis.grouPay.friend.application.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +12,10 @@ import java.util.List;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
-    private final FriendService friendService;
 
     @Autowired
-    public ExpenseService(ExpenseRepository expenseRepository, FriendService friendService) {
+    public ExpenseService(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
-        this.friendService = friendService;
     }
 
     public List<Expense> getExpenses() {
