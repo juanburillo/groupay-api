@@ -22,18 +22,12 @@ public class ExpenseService {
     }
 
     public List<Expense> getExpenses() {
-        List<Expense> expenses = expenseRepository.findAll();
-        for (Expense expense : expenses) {
-            setExpenseFriend(expense);
-        }
-        return expenses;
+        return expenseRepository.findAll();
     }
 
     public Expense getExpense(Long id) {
         if (expenseRepository.existsById(id)) {
-            Expense expense = expenseRepository.findById(id);
-            setExpenseFriend(expense);
-            return expense;
+            return expenseRepository.findById(id);
         } else {
             throw new ExpenseNotFoundException("Expense not found");
         }
@@ -42,7 +36,6 @@ public class ExpenseService {
     public void createExpense(Expense expense) {
         if (expense.getAmount() <= 0) throw new IllegalArgumentException("Amount must be greater than 0");
         expense.setDate(new Timestamp(System.currentTimeMillis()));
-        setExpenseFriend(expense);
         expenseRepository.save(expense);
     }
 
@@ -56,10 +49,6 @@ public class ExpenseService {
         } else {
             throw new ExpenseNotFoundException("Expense not found");
         }
-    }
-
-    private void setExpenseFriend(Expense expense) {
-        expense.setFriend(friendService.getFriend(expense.getFriend().getId()));
     }
 
 }

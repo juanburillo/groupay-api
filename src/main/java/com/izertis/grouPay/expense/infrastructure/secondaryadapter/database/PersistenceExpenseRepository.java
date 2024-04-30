@@ -19,6 +19,7 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
     private static final String DELETE_EXPENSES = "DELETE FROM expense";
     private static final String DELETE_EXPENSE = "DELETE FROM expense WHERE id = ?";
     private static final String EXPENSE_EXISTS = "SELECT COUNT(*) FROM expense WHERE id = ?";
+    private static final String SELECT_EXPENSE_FRIEND_NAME = "SELECT name FROM friend JOIN expense ON friend.id = friend_id WHERE expense.id = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -39,7 +40,11 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
             return expenseEntity;
         });
 
-        return ExpenseMapper.INSTANCE.toModelList(expenseEntities);
+        List<Expense> expenses = ExpenseMapper.INSTANCE.toModelList(expenseEntities);
+        for (Expense expense : expenses) {
+            expense.getFriend().setName(jdbcTemplate.queryForObject(SELECT_EXPENSE_FRIEND_NAME, new Object[]{(expense.getId())}, String.class));
+        }
+        return expenses;
     }
 
     @Override
@@ -51,7 +56,9 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
                 rs.getTimestamp(4),
                 rs.getLong(5)));
 
-        return ExpenseMapper.INSTANCE.toModel(expenseEntity);
+        Expense expense = ExpenseMapper.INSTANCE.toModel(expenseEntity);
+        expense.getFriend().setName(jdbcTemplate.queryForObject(SELECT_EXPENSE_FRIEND_NAME, new Object[]{(expense.getId())}, String.class));
+        return expense;
     }
 
     @Override
