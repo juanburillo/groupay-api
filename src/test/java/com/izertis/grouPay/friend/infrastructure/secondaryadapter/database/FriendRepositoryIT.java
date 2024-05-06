@@ -3,39 +3,35 @@ package com.izertis.grouPay.friend.infrastructure.secondaryadapter.database;
 import com.izertis.grouPay.friend.domain.Friend;
 import com.izertis.grouPay.friend.domain.FriendRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 @SpringBootTest
+@Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FriendRepositoryIT {
 
     private final FriendRepository friendRepository;
 
+    private final Flyway flyway;
+
     @Autowired
-    public FriendRepositoryIT(FriendRepository friendRepository) {
+    public FriendRepositoryIT(FriendRepository friendRepository, Flyway flyway) {
         this.friendRepository = friendRepository;
+        this.flyway = flyway;
     }
 
-    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0");
-
-    @BeforeAll
-    static void beforeAll() {
-        mysql.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mysql.stop();
-    }
+    @Container
+    static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -46,13 +42,12 @@ public class FriendRepositoryIT {
 
     @BeforeEach
     void setUp() {
-        friendRepository.deleteAll();
-        friendRepository.save(new Friend(1L, "Juan"));
-        friendRepository.save(new Friend(2L, "María"));
-        friendRepository.save(new Friend(3L, "Belén"));
+        flyway.clean();
+        flyway.migrate();
     }
 
     @Test
+    @Order(1)
     void shouldGetAllFriends() {
         // When
         List<Friend> returnedFriends = friendRepository.findAll();
@@ -62,6 +57,7 @@ public class FriendRepositoryIT {
     }
 
     @Test
+    @Order(2)
     void shouldGetFriendById() {
         // Given
         Long friendId = 1L;
@@ -75,6 +71,7 @@ public class FriendRepositoryIT {
     }
 
     @Test
+    @Order(3)
     void shouldCreateFriend() {
         // Given
         Long friendId = 4L;
@@ -90,6 +87,7 @@ public class FriendRepositoryIT {
     }
 
     @Test
+    @Order(4)
     void shouldUpdateFriend() {
         // Given
         Long friendId = 1L;
@@ -106,17 +104,7 @@ public class FriendRepositoryIT {
     }
 
     @Test
-    void shouldDeleteAllFriends() {
-        // When
-        friendRepository.deleteAll();
-
-        List<Friend> returnedFriends = friendRepository.findAll();
-
-        // Then
-        Assertions.assertThat(returnedFriends).isEmpty();
-    }
-
-    @Test
+    @Order(5)
     void shouldDeleteFriendById() {
         // Given
         Long friendId = 1L;
@@ -128,6 +116,18 @@ public class FriendRepositoryIT {
 
         // Then
         Assertions.assertThat(friendExists).isFalse();
+    }
+
+    @Test
+    @Order(6)
+    void shouldDeleteAllFriends() {
+        // When
+        friendRepository.deleteAll();
+
+        List<Friend> returnedFriends = friendRepository.findAll();
+
+        // Then
+        Assertions.assertThat(returnedFriends).isEmpty();
     }
 
 }
