@@ -1,19 +1,18 @@
 package com.izertis.grouPay.friend.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.friend.application.FriendService;
 import com.izertis.grouPay.friend.domain.Friend;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -21,29 +20,22 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FriendControllerIT {
 
-    private final FriendService friendService;
+    private final Flyway flyway;
 
     @Autowired
-    public FriendControllerIT(FriendService friendService) {
-        this.friendService = friendService;
+    public FriendControllerIT(Flyway flyway) {
+        this.flyway = flyway;
     }
 
     @LocalServerPort
     private Integer port;
 
+    @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
-
-    @BeforeAll
-    static void beforeAll() {
-        mysql.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mysql.stop();
-    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -55,13 +47,12 @@ public class FriendControllerIT {
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
-        friendService.deleteFriends();
-        friendService.createFriend(new Friend(1L, "Juan"));
-        friendService.createFriend(new Friend(2L, "María"));
-        friendService.createFriend(new Friend(3L, "Belén"));
+        flyway.clean();
+        flyway.migrate();
     }
 
     @Test
+    @Order(1)
     void shouldGetAllFriends() {
         // All friends are found
         given()
@@ -74,6 +65,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(2)
     void shouldGetFriendById() {
         // Friend is found
         given()
@@ -88,6 +80,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(3)
     void shouldCreateFriend() {
         Long friendId = 4L;
         Friend friend = new Friend(friendId, "Adrián");
@@ -113,6 +106,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(4)
     void shouldUpdateFriend() {
         Long friendId = 1L;
 
@@ -136,6 +130,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(5)
     void shouldDeleteFriendById() {
         Long friendId = 1L;
 
@@ -157,6 +152,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(6)
     void shouldDeleteAllFriends() {
         // All friends are deleted
         when()
@@ -174,6 +170,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(7)
     void shouldFailToGetNonExistentFriend() {
         // Friend is not found
         given()
@@ -185,6 +182,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(8)
     void shouldFailToUpdateNonExistentFriend() {
         // Friend is not found
         given()
@@ -197,6 +195,7 @@ public class FriendControllerIT {
     }
 
     @Test
+    @Order(9)
     void shouldFailToDeleteNonExistentFriend() {
         // Friend is not found
         given()
