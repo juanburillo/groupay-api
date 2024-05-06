@@ -22,12 +22,9 @@ public class FriendRepositoryIT {
 
     private final FriendRepository friendRepository;
 
-    private final Flyway flyway;
-
     @Autowired
-    public FriendRepositoryIT(FriendRepository friendRepository, Flyway flyway) {
+    public FriendRepositoryIT(FriendRepository friendRepository) {
         this.friendRepository = friendRepository;
-        this.flyway = flyway;
     }
 
     @Container
@@ -40,8 +37,8 @@ public class FriendRepositoryIT {
         registry.add("spring.datasource.password", mysql::getPassword);
     }
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
     }

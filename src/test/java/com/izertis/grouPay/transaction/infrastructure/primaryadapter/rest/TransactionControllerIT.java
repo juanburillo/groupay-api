@@ -3,7 +3,7 @@ package com.izertis.grouPay.transaction.infrastructure.primaryadapter.rest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,16 +21,6 @@ import static org.hamcrest.Matchers.hasSize;
 @Testcontainers
 public class TransactionControllerIT {
 
-    private final Flyway flyway;
-
-    @Autowired
-    public TransactionControllerIT(Flyway flyway) {
-        this.flyway = flyway;
-    }
-
-    @LocalServerPort
-    private Integer port;
-
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
 
@@ -41,8 +31,8 @@ public class TransactionControllerIT {
         registry.add("spring.datasource.password", mysql::getPassword);
     }
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll(@Autowired Flyway flyway, @LocalServerPort Integer port) {
         RestAssured.baseURI = "http://localhost:" + port;
         flyway.clean();
         flyway.migrate();

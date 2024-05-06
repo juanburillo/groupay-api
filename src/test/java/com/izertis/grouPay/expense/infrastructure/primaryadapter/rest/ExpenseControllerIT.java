@@ -25,16 +25,6 @@ import static org.hamcrest.Matchers.hasSize;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ExpenseControllerIT {
 
-    private final Flyway flyway;
-
-    @Autowired
-    public ExpenseControllerIT(Flyway flyway) {
-        this.flyway = flyway;
-    }
-
-    @LocalServerPort
-    private Integer port;
-
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
 
@@ -45,8 +35,8 @@ public class ExpenseControllerIT {
         registry.add("spring.datasource.password", mysql::getPassword);
     }
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll(@Autowired Flyway flyway, @LocalServerPort Integer port) {
         RestAssured.baseURI = "http://localhost:" + port;
         flyway.clean();
         flyway.migrate();
@@ -97,24 +87,6 @@ public class ExpenseControllerIT {
 
     @Test
     @Order(4)
-    void shouldDeleteAllExpenses() {
-        // All expenses are deleted
-        when()
-                .delete("/api/expense")
-                .then()
-                .statusCode(200);
-
-        // No expenses are found
-        given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/api/expense")
-                .then()
-                .body(".", hasSize(0));
-    }
-
-    @Test
-    @Order(5)
     void shouldDeleteExpenseById() {
         Long expenseId = 1L;
 
@@ -134,6 +106,24 @@ public class ExpenseControllerIT {
                 .get("/api/expense/{id}")
                 .then()
                 .statusCode(404);
+    }
+
+    @Test
+    @Order(5)
+    void shouldDeleteAllExpenses() {
+        // All expenses are deleted
+        when()
+                .delete("/api/expense")
+                .then()
+                .statusCode(200);
+
+        // No expenses are found
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/expense")
+                .then()
+                .body(".", hasSize(0));
     }
 
     @Test
