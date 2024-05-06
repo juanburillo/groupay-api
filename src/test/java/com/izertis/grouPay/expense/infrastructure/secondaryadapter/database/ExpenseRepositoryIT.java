@@ -3,43 +3,36 @@ package com.izertis.grouPay.expense.infrastructure.secondaryadapter.database;
 import com.izertis.grouPay.expense.domain.Expense;
 import com.izertis.grouPay.expense.domain.ExpenseRepository;
 import com.izertis.grouPay.friend.domain.Friend;
-import com.izertis.grouPay.friend.domain.FriendRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
 @SpringBootTest
+@Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ExpenseRepositoryIT {
 
     private final ExpenseRepository expenseRepository;
-    private final FriendRepository friendRepository;
+
+    private final Flyway flyway;
 
     @Autowired
-    public ExpenseRepositoryIT(ExpenseRepository expenseRepository, FriendRepository friendRepository) {
+    public ExpenseRepositoryIT(ExpenseRepository expenseRepository, Flyway flyway) {
         this.expenseRepository = expenseRepository;
-        this.friendRepository = friendRepository;
+        this.flyway = flyway;
     }
 
+    @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
-
-    @BeforeAll
-    static void beforeAll() {
-        mysql.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mysql.stop();
-    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -50,17 +43,12 @@ public class ExpenseRepositoryIT {
 
     @BeforeEach
     void setUp() {
-        friendRepository.deleteAll();
-        friendRepository.save(new Friend(1L, "Juan"));
-        friendRepository.save(new Friend(2L, "María"));
-        friendRepository.save(new Friend(3L, "Belén"));
-        expenseRepository.deleteAll();
-        expenseRepository.save(new Expense(1L, 10.0, "Description 1", new Friend(1L, "Juan")));
-        expenseRepository.save(new Expense(2L, 20.0, "Description 2", new Friend(2L, "María")));
-        expenseRepository.save(new Expense(3L, 30.0, "Description 3", new Friend(3L, "Belén")));
+        flyway.clean();
+        flyway.migrate();
     }
 
     @Test
+    @Order(1)
     void shouldGetAllExpenses() {
         // When
         List<Expense> returnedExpenses = expenseRepository.findAll();
@@ -70,6 +58,7 @@ public class ExpenseRepositoryIT {
     }
 
     @Test
+    @Order(2)
     void shouldGetExpenseById() {
         // Given
         Long expenseId = 1L;
@@ -83,6 +72,7 @@ public class ExpenseRepositoryIT {
     }
 
     @Test
+    @Order(3)
     void shouldCreateExpense() {
         // Given
         Long expenseId = 4L;
@@ -98,6 +88,7 @@ public class ExpenseRepositoryIT {
     }
 
     @Test
+    @Order(4)
     void shouldDeleteAllExpenses() {
         // When
         expenseRepository.deleteAll();
@@ -109,6 +100,7 @@ public class ExpenseRepositoryIT {
     }
 
     @Test
+    @Order(5)
     void shouldDeleteExpenseById() {
         // Given
         Long expenseId = 1L;

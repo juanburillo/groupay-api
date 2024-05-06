@@ -1,23 +1,19 @@
 package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.expense.application.ExpenseService;
 import com.izertis.grouPay.expense.domain.Expense;
-import com.izertis.grouPay.friend.application.FriendService;
 import com.izertis.grouPay.friend.domain.Friend;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
-
-import java.sql.Timestamp;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
@@ -25,31 +21,22 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ExpenseControllerIT {
 
-    private final ExpenseService expenseService;
-    private final FriendService friendService;
+    private final Flyway flyway;
 
     @Autowired
-    public ExpenseControllerIT(ExpenseService expenseService, FriendService friendService) {
-        this.expenseService = expenseService;
-        this.friendService = friendService;
+    public ExpenseControllerIT(Flyway flyway) {
+        this.flyway = flyway;
     }
 
     @LocalServerPort
     private Integer port;
 
+    @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
-
-    @BeforeAll
-    static void beforeAll() {
-        mysql.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        mysql.stop();
-    }
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -61,17 +48,12 @@ public class ExpenseControllerIT {
     @BeforeEach
     void setUp() {
         RestAssured.baseURI = "http://localhost:" + port;
-        friendService.deleteFriends();
-        friendService.createFriend(new Friend(1L, "Juan"));
-        friendService.createFriend(new Friend(2L, "María"));
-        friendService.createFriend(new Friend(3L, "Belén"));
-        expenseService.deleteExpenses();
-        expenseService.createExpense(new Expense(1L, 10.0, "Description 1", new Friend(1L, "Juan")));
-        expenseService.createExpense(new Expense(2L, 20.0, "Description 2", new Friend(2L, "María")));
-        expenseService.createExpense(new Expense(3L, 30.0, "Description 3", new Friend(3L, "Belén")));
+        flyway.clean();
+        flyway.migrate();
     }
 
     @Test
+    @Order(1)
     void shouldGetAllExpenses() {
         // All expenses are found
         given()
@@ -84,6 +66,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
+    @Order(2)
     void shouldGetExpenseById() {
         // Expense is found
         given()
@@ -98,6 +81,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
+    @Order(3)
     void shouldCreateExpense() {
         Expense expense = new Expense(4L, 40.0, "Description 4", new Friend(1L, "Juan"));
 
@@ -112,6 +96,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
+    @Order(4)
     void shouldDeleteAllExpenses() {
         // All expenses are deleted
         when()
@@ -129,6 +114,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
+    @Order(5)
     void shouldDeleteExpenseById() {
         Long expenseId = 1L;
 
@@ -151,6 +137,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
+    @Order(6)
     void shouldFailToGetNonExistentExpense() {
         Long expenseId = 9L;
 
@@ -163,6 +150,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
+    @Order(7)
     void shouldFailToDeleteNonExistentExpense() {
         Long expenseId = 9L;
 
