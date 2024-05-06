@@ -23,12 +23,9 @@ public class ExpenseRepositoryIT {
 
     private final ExpenseRepository expenseRepository;
 
-    private final Flyway flyway;
-
     @Autowired
-    public ExpenseRepositoryIT(ExpenseRepository expenseRepository, Flyway flyway) {
+    public ExpenseRepositoryIT(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
-        this.flyway = flyway;
     }
 
     @Container
@@ -41,8 +38,8 @@ public class ExpenseRepositoryIT {
         registry.add("spring.datasource.password", mysql::getPassword);
     }
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll(@Autowired Flyway flyway) {
         flyway.clean();
         flyway.migrate();
     }
@@ -89,18 +86,6 @@ public class ExpenseRepositoryIT {
 
     @Test
     @Order(4)
-    void shouldDeleteAllExpenses() {
-        // When
-        expenseRepository.deleteAll();
-
-        List<Expense> returnedExpenses = expenseRepository.findAll();
-
-        // Then
-        Assertions.assertThat(returnedExpenses).isEmpty();
-    }
-
-    @Test
-    @Order(5)
     void shouldDeleteExpenseById() {
         // Given
         Long expenseId = 1L;
@@ -112,6 +97,18 @@ public class ExpenseRepositoryIT {
 
         // Then
         Assertions.assertThat(expenseExists).isFalse();
+    }
+
+    @Test
+    @Order(5)
+    void shouldDeleteAllExpenses() {
+        // When
+        expenseRepository.deleteAll();
+
+        List<Expense> returnedExpenses = expenseRepository.findAll();
+
+        // Then
+        Assertions.assertThat(returnedExpenses).isEmpty();
     }
 
 }

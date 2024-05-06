@@ -21,16 +21,6 @@ import static org.hamcrest.Matchers.hasSize;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class BalanceControllerIT {
 
-    private final Flyway flyway;
-
-    @Autowired
-    public BalanceControllerIT(Flyway flyway) {
-        this.flyway = flyway;
-    }
-
-    @LocalServerPort
-    private Integer port;
-
     @Container
     static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:latest");
 
@@ -41,8 +31,8 @@ public class BalanceControllerIT {
         registry.add("spring.datasource.password", mysql::getPassword);
     }
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void beforeAll(@Autowired Flyway flyway, @LocalServerPort Integer port) {
         RestAssured.baseURI = "http://localhost:" + port;
         flyway.clean();
         flyway.migrate();
