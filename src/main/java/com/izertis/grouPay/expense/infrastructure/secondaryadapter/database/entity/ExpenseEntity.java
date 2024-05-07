@@ -1,8 +1,6 @@
 package com.izertis.grouPay.expense.infrastructure.secondaryadapter.database.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +17,7 @@ import java.sql.Timestamp;
 public class ExpenseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double amount;
     private String description;
