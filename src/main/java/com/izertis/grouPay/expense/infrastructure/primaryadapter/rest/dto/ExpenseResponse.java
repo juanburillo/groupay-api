@@ -1,4 +1,4 @@
-package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
+package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.izertis.grouPay.friend.domain.Friend;

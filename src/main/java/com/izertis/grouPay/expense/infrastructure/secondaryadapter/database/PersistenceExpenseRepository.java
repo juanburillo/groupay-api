@@ -73,6 +73,17 @@ public class PersistenceExpenseRepository implements ExpenseRepository {
     }
 
     @Override
+    public void update(Expense expense) {
+        ExpenseEntity expenseEntity = ExpenseMapper.INSTANCE.toEntity(expense);
+        if (expense.getAmount() != null) {
+            jdbcTemplate.update("UPDATE expense SET amount = ? WHERE id = ?", expenseEntity.getAmount(), expenseEntity.getId());
+        }
+        if (expense.getDescription() != null) {
+            jdbcTemplate.update("UPDATE expense SET description = ? WHERE id = ?", expenseEntity.getDescription(), expenseEntity.getId());
+        }
+    }
+
+    @Override
     public void deleteAll() {
         jdbcTemplate.update(DELETE_EXPENSES);
     }

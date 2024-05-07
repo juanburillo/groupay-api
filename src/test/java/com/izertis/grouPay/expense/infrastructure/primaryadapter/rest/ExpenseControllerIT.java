@@ -1,7 +1,7 @@
 package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.expense.domain.Expense;
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.CreateExpenseRequest;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.UpdateExpenseRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
@@ -75,12 +75,12 @@ public class ExpenseControllerIT {
     @Test
     @Order(3)
     void shouldCreateExpense() {
-        Expense expense = new Expense(4L, 40.0, "Description 4", new Friend(1L, "Juan"));
+        CreateExpenseRequest createExpenseRequest = new CreateExpenseRequest(4L, 40.0, "Description 4", 1L);
 
         // Expense is created
         given()
                 .contentType(ContentType.JSON)
-                .body(expense)
+                .body(createExpenseRequest)
                 .when()
                 .post("/api/expense")
                 .then()
@@ -89,6 +89,31 @@ public class ExpenseControllerIT {
 
     @Test
     @Order(4)
+    void shouldUpdateExpense() {
+        Long expenseId = 1L;
+        UpdateExpenseRequest updateExpenseRequest = new UpdateExpenseRequest(expenseId, 50.0, "Updated Description");
+
+        // Expense is updated and 200 status code is returned
+        given()
+                .contentType(ContentType.JSON)
+                .body(updateExpenseRequest)
+                .when()
+                .put("/api/expense")
+                .then()
+                .statusCode(200);
+
+        // Updated expense is found in the database
+        given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get("/api/expense/" + expenseId)
+                .then()
+                .statusCode(200)
+                .body("description", equalTo("Updated Description"));
+    }
+
+    @Test
+    @Order(5)
     void shouldDeleteExpenseById() {
         Long expenseId = 1L;
 
@@ -111,7 +136,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void shouldDeleteAllExpenses() {
         // All expenses are deleted
         when()
@@ -129,7 +154,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void shouldFailToGetNonExistentExpense() {
         Long expenseId = 9L;
 
@@ -142,7 +167,7 @@ public class ExpenseControllerIT {
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void shouldFailToDeleteNonExistentExpense() {
         Long expenseId = 9L;
 

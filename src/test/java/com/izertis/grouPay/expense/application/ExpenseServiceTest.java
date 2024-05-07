@@ -2,7 +2,9 @@ package com.izertis.grouPay.expense.application;
 
 import com.izertis.grouPay.expense.domain.Expense;
 import com.izertis.grouPay.expense.domain.ExpenseRepository;
+import com.izertis.grouPay.friend.application.FriendNotFoundException;
 import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.domain.FriendRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,8 +15,9 @@ import java.util.List;
 public class ExpenseServiceTest {
 
     private final ExpenseRepository expenseRepository = Mockito.mock(ExpenseRepository.class);
+    private final FriendRepository friendRepository = Mockito.mock(FriendRepository.class);
 
-    private final ExpenseService sut = new ExpenseService(expenseRepository);
+    private final ExpenseService sut = new ExpenseService(expenseRepository, friendRepository);
 
     @Test
     void shouldFindAllExpensesAndReturnExpenses() {
@@ -69,9 +72,12 @@ public class ExpenseServiceTest {
     @Test
     void shouldCreateExpense() {
         // Given
-        Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L, "Juan"));
+        Long friendId = 1L;
+        Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(friendId, "Juan"));
 
         // When
+        Mockito.when(friendRepository.existsById(friendId)).thenReturn(true);
+
         sut.createExpense(expectedExpense);
 
         // Then
@@ -87,6 +93,48 @@ public class ExpenseServiceTest {
 
         // When & Then
         Assertions.assertThatThrownBy(() -> sut.createExpense(invalidExpense))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Amount must be greater than 0");
+    }
+
+    @Test
+    void shouldFailToCreateExpenseIfFriendIsNotFound() {
+        // Given
+        Long friendId = 1L;
+        Expense expenseWithNonExistentFriend = new Expense(1L, 1.0, "Description 1", new Friend(friendId, "Juan"));
+
+        Class<FriendNotFoundException> expectedException = FriendNotFoundException.class;
+
+        // When
+        Mockito.when(friendRepository.existsById(friendId)).thenReturn(false);
+
+        // Then
+        Assertions.assertThatThrownBy(() -> sut.createExpense(expenseWithNonExistentFriend))
+                .isInstanceOf(expectedException)
+                .hasMessageContaining("Friend not found");
+    }
+
+    @Test
+    void shouldUpdateExpense() {
+        // Given
+        Expense expectedExpense = new Expense(1L, 40.0, "Updated Expense", null);
+
+        // When
+        sut.updateExpense(expectedExpense);
+
+        // Then
+        Mockito.verify(expenseRepository).update(expectedExpense);
+    }
+
+    @Test
+    void shouldFailToUpdateExpenseWithNegativeAmount() {
+        // Given
+        Expense invalidExpense = new Expense(1L, -1.0, "Description 1", null);
+
+        Class<IllegalArgumentException> expectedException = IllegalArgumentException.class;
+
+        // When & Then
+        Assertions.assertThatThrownBy(() -> sut.updateExpense(invalidExpense))
                 .isInstanceOf(expectedException)
                 .hasMessageContaining("Amount must be greater than 0");
     }
