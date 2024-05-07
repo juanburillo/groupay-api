@@ -33,7 +33,9 @@ public class JpaExpenseRepositoryAdapter implements ExpenseRepository {
     @Override
     public Expense findById(Long id) {
         Optional<ExpenseEntity> expenseEntityOptional = jpaRepository.findById(id);
-        return expenseEntityOptional.map(ExpenseMapper.INSTANCE::toModel).orElse(null);
+        Expense expense = expenseEntityOptional.map(ExpenseMapper.INSTANCE::toModel).orElse(null);
+        expense.getFriend().setName(jpaRepository.findExpenseFriendNameById(id));
+        return expense;
     }
 
     @Override
