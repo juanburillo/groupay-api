@@ -1,8 +1,9 @@
 package com.izertis.grouPay.transaction.application;
 
-import com.izertis.grouPay.balance.application.BalanceService;
+import com.izertis.grouPay.balance.application.service.BalanceService;
 import com.izertis.grouPay.balance.domain.Balance;
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.domain.model.Friend;
+import com.izertis.grouPay.transaction.application.service.TransactionService;
 import com.izertis.grouPay.transaction.domain.Transaction;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,10 @@
 package com.izertis.grouPay.friend.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.friend.application.FriendService;
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.application.service.FriendService;
+import com.izertis.grouPay.friend.domain.model.Friend;
+import com.izertis.grouPay.friend.infrastructure.primaryadapter.rest.controller.FriendController;
+import com.izertis.grouPay.friend.infrastructure.primaryadapter.rest.dto.FriendRequest;
+import com.izertis.grouPay.friend.infrastructure.primaryadapter.rest.dto.FriendResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

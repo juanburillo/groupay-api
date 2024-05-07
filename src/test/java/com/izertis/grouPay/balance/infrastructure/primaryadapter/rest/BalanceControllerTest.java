@@ -1,8 +1,10 @@
 package com.izertis.grouPay.balance.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.balance.application.BalanceService;
+import com.izertis.grouPay.balance.application.service.BalanceService;
 import com.izertis.grouPay.balance.domain.Balance;
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.balance.infrastructure.primaryadapter.rest.controller.BalanceController;
+import com.izertis.grouPay.balance.infrastructure.primaryadapter.rest.dto.BalanceResponse;
+import com.izertis.grouPay.friend.domain.model.Friend;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

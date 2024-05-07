@@ -1,12 +1,13 @@
 package com.izertis.grouPay.friend.application;
 
-import com.izertis.grouPay.friend.domain.Friend;
-import com.izertis.grouPay.friend.domain.FriendRepository;
+import com.izertis.grouPay.friend.application.exception.FriendNotFoundException;
+import com.izertis.grouPay.friend.application.service.FriendService;
+import com.izertis.grouPay.friend.domain.model.Friend;
+import com.izertis.grouPay.friend.domain.repository.FriendRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

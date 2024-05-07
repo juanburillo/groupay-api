@@ -1,11 +1,12 @@
 package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.expense.application.ExpenseService;
-import com.izertis.grouPay.expense.domain.Expense;
+import com.izertis.grouPay.expense.application.service.ExpenseService;
+import com.izertis.grouPay.expense.domain.model.Expense;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.controller.ExpenseController;
 import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.CreateExpenseRequest;
 import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.ExpenseResponse;
 import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.UpdateExpenseRequest;
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.domain.model.Friend;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
