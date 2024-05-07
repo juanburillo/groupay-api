@@ -1,8 +1,10 @@
 package com.izertis.grouPay.transaction.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.friend.domain.Friend;
-import com.izertis.grouPay.transaction.application.TransactionService;
+import com.izertis.grouPay.friend.domain.model.Friend;
+import com.izertis.grouPay.transaction.application.service.TransactionService;
 import com.izertis.grouPay.transaction.domain.Transaction;
+import com.izertis.grouPay.transaction.infrastructure.primaryadapter.rest.controller.TransactionController;
+import com.izertis.grouPay.transaction.infrastructure.primaryadapter.rest.dto.TransactionResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

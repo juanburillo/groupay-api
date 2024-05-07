@@ -1,8 +1,8 @@
 package com.izertis.grouPay.expense.infrastructure.secondaryadapter.database;
 
-import com.izertis.grouPay.expense.domain.Expense;
-import com.izertis.grouPay.expense.domain.ExpenseRepository;
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.expense.domain.model.Expense;
+import com.izertis.grouPay.expense.domain.repository.ExpenseRepository;
+import com.izertis.grouPay.friend.domain.model.Friend;
 import org.assertj.core.api.Assertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.*;

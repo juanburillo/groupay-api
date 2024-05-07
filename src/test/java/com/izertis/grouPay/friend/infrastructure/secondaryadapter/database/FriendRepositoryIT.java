@@ -1,7 +1,7 @@
 package com.izertis.grouPay.friend.infrastructure.secondaryadapter.database;
 
-import com.izertis.grouPay.friend.domain.Friend;
-import com.izertis.grouPay.friend.domain.FriendRepository;
+import com.izertis.grouPay.friend.domain.model.Friend;
+import com.izertis.grouPay.friend.domain.repository.FriendRepository;
 import org.assertj.core.api.Assertions;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.*;

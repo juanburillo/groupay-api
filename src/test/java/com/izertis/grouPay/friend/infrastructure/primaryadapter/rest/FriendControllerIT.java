@@ -1,6 +1,6 @@
 package com.izertis.grouPay.friend.infrastructure.primaryadapter.rest;
 
-import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.domain.model.Friend;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;

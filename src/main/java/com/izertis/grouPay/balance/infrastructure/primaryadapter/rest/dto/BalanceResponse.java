@@ -1,4 +1,4 @@
-package com.izertis.grouPay.balance.domain;
+package com.izertis.grouPay.balance.infrastructure.primaryadapter.rest.dto;
 
 import com.izertis.grouPay.friend.domain.model.Friend;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
-public class Balance {
+public class BalanceResponse {
 
     private Friend friend;
     private Double amount;

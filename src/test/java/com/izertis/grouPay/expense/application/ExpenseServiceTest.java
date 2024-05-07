@@ -1,10 +1,12 @@
 package com.izertis.grouPay.expense.application;
 
-import com.izertis.grouPay.expense.domain.Expense;
-import com.izertis.grouPay.expense.domain.ExpenseRepository;
-import com.izertis.grouPay.friend.application.FriendNotFoundException;
-import com.izertis.grouPay.friend.domain.Friend;
-import com.izertis.grouPay.friend.domain.FriendRepository;
+import com.izertis.grouPay.expense.application.exception.ExpenseNotFoundException;
+import com.izertis.grouPay.expense.application.service.ExpenseService;
+import com.izertis.grouPay.expense.domain.model.Expense;
+import com.izertis.grouPay.expense.domain.repository.ExpenseRepository;
+import com.izertis.grouPay.friend.application.exception.FriendNotFoundException;
+import com.izertis.grouPay.friend.domain.model.Friend;
+import com.izertis.grouPay.friend.domain.repository.FriendRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
