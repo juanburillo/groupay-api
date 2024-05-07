@@ -1,6 +1,4 @@
 # docker compose up
-# docker compose -f ./docker-compose.yml up --build
-# docker exec -it docker-mysql-1 /bin/bash
 
 version: '3'
 services:
@@ -12,3 +10,20 @@ services:
     ports:
       - 3306:3306
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -ppass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  spring-app:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/groupay
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: pass
