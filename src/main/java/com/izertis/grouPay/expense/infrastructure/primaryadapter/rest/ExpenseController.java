@@ -2,6 +2,9 @@ package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
 
 import com.izertis.grouPay.expense.application.ExpenseService;
 import com.izertis.grouPay.expense.infrastructure.ExpenseMapper;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.CreateExpenseRequest;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.ExpenseResponse;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.UpdateExpenseRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,8 +56,18 @@ public class ExpenseController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createExpense(@RequestBody ExpenseRequest expenseRequest) {
-        expenseService.createExpense(ExpenseMapper.INSTANCE.toModel(expenseRequest));
+    public void createExpense(@RequestBody CreateExpenseRequest createExpenseRequest) {
+        expenseService.createExpense(ExpenseMapper.INSTANCE.toModel(createExpenseRequest));
+    }
+
+    @Operation(summary = "Update an expense")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Expense created"),
+            @ApiResponse(responseCode = "404", description = "Expense not found")
+    })
+    @PutMapping
+    public void updateExpense(@RequestBody UpdateExpenseRequest updateExpenseRequest) {
+        expenseService.updateExpense(ExpenseMapper.INSTANCE.toModel(updateExpenseRequest));
     }
 
     @DeleteMapping

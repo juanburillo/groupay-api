@@ -88,6 +88,22 @@ public class ExpenseRepositoryIT {
 
     @Test
     @Order(4)
+    void shouldUpdateExpense() {
+        // Given
+        Long expenseId = 1L;
+        Expense expectedExpense = new Expense(expenseId, 50.0, "Updated Description", new Friend(1L, "Juan"));
+
+        // When
+        expenseRepository.update(expectedExpense);
+
+        Expense returnedExpense = expenseRepository.findById(expenseId);
+
+        // Then
+        Assertions.assertThat(returnedExpense).isEqualTo(expectedExpense);
+    }
+
+    @Test
+    @Order(5)
     void shouldDeleteExpenseById() {
         // Given
         Long expenseId = 1L;
@@ -102,7 +118,7 @@ public class ExpenseRepositoryIT {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     void shouldDeleteAllExpenses() {
         // When
         expenseRepository.deleteAll();

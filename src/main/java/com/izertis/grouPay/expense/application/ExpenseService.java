@@ -2,6 +2,9 @@ package com.izertis.grouPay.expense.application;
 
 import com.izertis.grouPay.expense.domain.Expense;
 import com.izertis.grouPay.expense.domain.ExpenseRepository;
+import com.izertis.grouPay.friend.application.FriendNotFoundException;
+import com.izertis.grouPay.friend.domain.Friend;
+import com.izertis.grouPay.friend.domain.FriendRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +15,12 @@ import java.util.List;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final FriendRepository friendRepository;
 
     @Autowired
-    public ExpenseService(ExpenseRepository expenseRepository) {
+    public ExpenseService(ExpenseRepository expenseRepository, FriendRepository friendRepository) {
         this.expenseRepository = expenseRepository;
+        this.friendRepository = friendRepository;
     }
 
     public List<Expense> getExpenses() {
@@ -32,8 +37,15 @@ public class ExpenseService {
 
     public void createExpense(Expense expense) {
         if (expense.getAmount() <= 0) throw new IllegalArgumentException("Amount must be greater than 0");
+        if (!friendRepository.existsById(expense.getFriend().getId())) throw new FriendNotFoundException("Friend not found");
         expense.setDate(new Timestamp(System.currentTimeMillis()));
         expenseRepository.save(expense);
+    }
+
+    public void updateExpense(Expense expense) {
+        if (expense.getAmount() <= 0) throw new IllegalArgumentException("Amount must be greater than 0");
+        expense.setFriend(new Friend(0L, ""));
+        expenseRepository.update(expense);
     }
 
     public void deleteExpenses() {

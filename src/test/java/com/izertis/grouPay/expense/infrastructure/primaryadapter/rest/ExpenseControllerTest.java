@@ -2,6 +2,9 @@ package com.izertis.grouPay.expense.infrastructure.primaryadapter.rest;
 
 import com.izertis.grouPay.expense.application.ExpenseService;
 import com.izertis.grouPay.expense.domain.Expense;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.CreateExpenseRequest;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.ExpenseResponse;
+import com.izertis.grouPay.expense.infrastructure.primaryadapter.rest.dto.UpdateExpenseRequest;
 import com.izertis.grouPay.friend.domain.Friend;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -59,14 +62,28 @@ public class ExpenseControllerTest {
     @Test
     void shouldCreateExpense() {
         // Given
-        ExpenseRequest expenseRequest = new ExpenseRequest(1L, 1.1, "Description 1", 1L);
+        CreateExpenseRequest createExpenseRequest = new CreateExpenseRequest(1L, 1.1, "Description 1", 1L);
         Expense expectedExpense = new Expense(1L, 1.1, "Description 1", new Friend(1L));
 
         // When
-        sut.createExpense(expenseRequest);
+        sut.createExpense(createExpenseRequest);
 
         // Then
         Mockito.verify(expenseService).createExpense(expectedExpense);
+    }
+
+    @Test
+    void shouldUpdateExpense() {
+        // Given
+        Long expenseId = 1L;
+        UpdateExpenseRequest updateExpenseRequest = new UpdateExpenseRequest(expenseId, 40.0, "Updated Description");
+        Expense expectedExpense = new Expense(expenseId, 40.0, "Updated Description", null);
+
+        // When
+        sut.updateExpense(updateExpenseRequest);
+
+        // Then
+        Mockito.verify(expenseService).updateExpense(expectedExpense);
     }
 
     @Test
