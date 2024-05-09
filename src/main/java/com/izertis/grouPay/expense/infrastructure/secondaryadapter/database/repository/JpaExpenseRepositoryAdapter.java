@@ -25,9 +25,15 @@ public class JpaExpenseRepositoryAdapter implements ExpenseRepository {
 
     @Override
     public List<Expense> findAll() {
-        return jpaRepository.findAll().stream()
+        List<Expense> expenses = jpaRepository.findAll().stream()
                 .map(ExpenseMapper.INSTANCE::toModel)
                 .collect(Collectors.toList());
+
+        for (Expense expense : expenses) {
+            expense.getFriend().setName(jpaRepository.findExpenseFriendNameById(expense.getId()));
+        }
+
+        return expenses;
     }
 
     @Override
