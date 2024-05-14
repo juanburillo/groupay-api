@@ -1,3 +1,8 @@
+# docker run --name mysql -e MYSQL_ROOT_PASSWORD=pass -e MYSQL_DATABASE=groupay -p 3306:3306 -d mysql
+# mvn clean install
+# docker build -t groupay -f Dockerfile .
+# docker stop mysql
+# docker rm mysql
 # docker compose up
 
 version: '3'
@@ -15,6 +20,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
 
   spring-app:
     build: .
