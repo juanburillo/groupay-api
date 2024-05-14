@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get the minimum amount of payment transactions every friend has to perform to clear the group debt")
     @ApiResponse(responseCode = "200", description = "Calculated and returned all transactions", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionResponse.class))

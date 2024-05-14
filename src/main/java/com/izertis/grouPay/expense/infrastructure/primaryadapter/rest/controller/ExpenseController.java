@@ -28,6 +28,7 @@ public class ExpenseController {
         this.expenseService = expenseService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get all expenses")
     @ApiResponse(responseCode = "200", description = "Found all expenses", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = ExpenseResponse.class))
@@ -37,6 +38,7 @@ public class ExpenseController {
         return ExpenseMapper.INSTANCE.toDtoList(expenseService.getExpenses());
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get an expense by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found specified expense", content = {
@@ -49,6 +51,7 @@ public class ExpenseController {
         return ExpenseMapper.INSTANCE.toDto(expenseService.getExpense(id));
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Create an expense in the database")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Expense created"),
@@ -60,6 +63,7 @@ public class ExpenseController {
         expenseService.createExpense(ExpenseMapper.INSTANCE.toModel(createExpenseRequest));
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Update an expense")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense created"),
@@ -77,6 +81,7 @@ public class ExpenseController {
         expenseService.deleteExpenses();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Delete an expense by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Expense deleted"),

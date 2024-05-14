@@ -10,10 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,7 @@ public class BalanceController {
         this.balanceService = balanceService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get all balances")
     @ApiResponse(responseCode = "200", description = "Calculated and returned all balances", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = BalanceResponse.class))
@@ -37,6 +35,7 @@ public class BalanceController {
         return BalanceMapper.INSTANCE.toDtoList(balanceService.getBalances());
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get a balance by its friend ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Calculated and returned specified friend balance", content = {

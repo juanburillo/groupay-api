@@ -27,6 +27,7 @@ public class FriendController {
         this.friendService = friendService;
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get all friends")
     @ApiResponse(responseCode = "200", description = "Found all friends", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = FriendResponse.class))
@@ -36,6 +37,7 @@ public class FriendController {
         return FriendMapper.INSTANCE.toDtoList(friendService.getFriends());
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get a friend by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found specified friend", content = {
@@ -48,6 +50,7 @@ public class FriendController {
         return FriendMapper.INSTANCE.toDto(friendService.getFriend(id));
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Create a friend in the database")
     @ApiResponse(responseCode = "201", description = "Friend created")
     @PostMapping
@@ -56,6 +59,7 @@ public class FriendController {
         friendService.createFriend(FriendMapper.INSTANCE.toModel(friendRequest));
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Update a friend")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Friend updated"),
@@ -74,6 +78,7 @@ public class FriendController {
         friendService.deleteFriends();
     }
 
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Delete a friend by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Friend deleted"),
