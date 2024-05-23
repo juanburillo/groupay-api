@@ -25,7 +25,6 @@ public class BalanceController {
         this.balanceService = balanceService;
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get all balances")
     @ApiResponse(responseCode = "200", description = "Calculated and returned all balances", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = BalanceResponse.class))
@@ -35,7 +34,6 @@ public class BalanceController {
         return BalanceMapper.INSTANCE.toDtoList(balanceService.getBalances());
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get a balance by its friend ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Calculated and returned specified friend balance", content = {

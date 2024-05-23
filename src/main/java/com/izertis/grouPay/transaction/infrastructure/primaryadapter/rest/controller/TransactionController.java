@@ -24,7 +24,6 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Get the minimum amount of payment transactions every friend has to perform to clear the group debt")
     @ApiResponse(responseCode = "200", description = "Calculated and returned all transactions", content = {
             @Content(mediaType = "application/json", schema = @Schema(implementation = TransactionResponse.class))
