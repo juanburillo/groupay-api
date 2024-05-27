@@ -17,12 +17,20 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/groupay
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: pass
+    depends_on:
+      database:
+        condition: service_healthy
   database:
     image: mysql
     container_name: database
     environment:
       MYSQL_ROOT_PASSWORD: pass
       MYSQL_DATABASE: groupay
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-p$$MYSQL_ROOT_PASSWORD","--protocol","tcp"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
     ports:
       - 3306:3306
     networks:
@@ -30,5 +38,5 @@ services:
     restart: always
     volumes:
       - ./src/main/resources/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-networks: 
+networks:
   appnet: {}
